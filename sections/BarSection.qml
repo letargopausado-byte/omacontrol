@@ -59,13 +59,18 @@ Ui.SectionBody {
       onResetRequested: page.app.resetSetting("bar-position")
     }
 
-    Ui.SwitchRow {
-      label: Ui.Strings.t("bar.transparent")
-      description: Ui.Strings.t("bar.dropsTheBarSOwn")
-      checked: page.app.barState.transparent === true
-      onRequested: function(next) { page.app.set("bar-transparent", next ? "true" : "false") }
-      changed: page.app.isChanged("bar-transparent")
-      onResetRequested: page.app.resetSetting("bar-transparent")
+    Ui.PickerRow {
+      label: Ui.Strings.t("bar.background")
+      description: Ui.Strings.t("bar.backgroundNote")
+      value: page.app.barState.background !== undefined ? String(page.app.barState.background) : "opaque"
+      options: [
+        { value: "opaque", label: Ui.Strings.t("bar.opaque") },
+        { value: "glassy", label: Ui.Strings.t("bar.glassy") },
+        { value: "none", label: Ui.Strings.t("bar.clear") }
+      ]
+      onPicked: function(next) { page.app.set("bar-background", next) }
+      changed: page.app.isChanged("bar-background")
+      onResetRequested: page.app.resetSetting("bar-background")
     }
 
     Ui.PickerRow {

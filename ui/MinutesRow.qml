@@ -29,7 +29,7 @@ Local.SettingRow {
     if (currentMinutes === pending || currentMinutes !== basis) stepping = false
   }
 
-  navKeys: [{ key: "\u2190\u2192", label: "Adjust" }]
+  navKeys: [{ key: "\u2190\u2192", label: Local.Strings.t("common.adjust") }]
 
   function commit(next) {
     var wanted = Math.max(1, Math.min(60, Math.round(next)))
@@ -66,7 +66,7 @@ Local.SettingRow {
       anchors.verticalCenter: parent.verticalCenter
       width: Style.space(76)
       horizontalAlignment: Text.AlignRight
-      text: minutesRow.shownMinutes + (minutesRow.shownMinutes === 1 ? " min" : " mins")
+      text: Local.Strings.tn("ui.minutesRow.minutes", minutesRow.shownMinutes).arg(minutesRow.shownMinutes)
       color: Local.Palette.muted
       font.family: Local.Palette.fontFamily
       font.pixelSize: Style.font.caption

@@ -10,8 +10,8 @@ Ui.SectionBody {
   id: page
   property var app: null
   Ui.SettingGroup {
-    title: "Add a sequence"
-    note: "The compose key first, then the keys to press after it. Write the compose key as <Multi_key>."
+    title: Ui.Strings.t("compose.addASequence")
+    note: Ui.Strings.t("compose.theComposeKeyFirstThen")
 
     Row {
       width: parent.width
@@ -20,7 +20,7 @@ Ui.SectionBody {
       TextField {
         id: keysField
         width: (parent.width - addButton.width - Style.space(16)) * 0.45
-        placeholderText: "<Multi_key> <s> <e>"
+        placeholderText: Ui.Strings.t("compose.multiKeySE")
         foreground: page.app.foreground
         accent: page.app.accent
       }
@@ -28,14 +28,14 @@ Ui.SectionBody {
       TextField {
         id: textField
         width: (parent.width - addButton.width - Style.space(16)) * 0.55
-        placeholderText: "text it types"
+        placeholderText: Ui.Strings.t("compose.textItTypes")
         foreground: page.app.foreground
         accent: page.app.accent
       }
 
       Button {
         id: addButton
-        text: "Add"
+        text: Ui.Strings.t("common.add")
         bordered: true
         foreground: page.app.foreground
         accent: page.app.accent
@@ -51,8 +51,8 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Your sequences"
-    note: page.app.composeEntries.length === 0 ? "Nothing defined yet." : ""
+    title: Ui.Strings.t("compose.yourSequences")
+    note: page.app.composeEntries.length === 0 ? Ui.Strings.t("compose.nothingDefined") : ""
 
     Repeater {
       model: page.app.composeEntries
@@ -91,7 +91,7 @@ Ui.SectionBody {
           anchors.right: parent.right
           anchors.verticalCenter: parent.verticalCenter
           iconText: "\uf00d"
-          tooltipText: "Remove"
+          tooltipText: Ui.Strings.t("common.remove")
           foreground: page.app.foreground
           onClicked: page.app.run(["compose", "remove", composeEntry.modelData.keys])
         }

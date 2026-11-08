@@ -48,10 +48,10 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Placement"
+    title: Ui.Strings.t("bar.placement")
 
     Ui.PickerRow {
-      label: "Position"
+      label: Ui.Strings.t("bar.position")
       value: page.app.barState.position !== undefined ? String(page.app.barState.position) : "top"
       options: ["top", "bottom", "left", "right"]
       onPicked: function(next) { page.app.set("bar-position", next) }
@@ -60,8 +60,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Transparent"
-      description: "Drops the bar's own background so the wallpaper shows through."
+      label: Ui.Strings.t("bar.transparent")
+      description: Ui.Strings.t("bar.dropsTheBarSOwn")
       checked: page.app.barState.transparent === true
       onRequested: function(next) { page.app.set("bar-transparent", next ? "true" : "false") }
       changed: page.app.isChanged("bar-transparent")
@@ -69,8 +69,8 @@ Ui.SectionBody {
     }
 
     Ui.PickerRow {
-      label: "Centered widget"
-      description: "The widget the centre section is anchored on."
+      label: Ui.Strings.t("bar.centeredWidget")
+      description: Ui.Strings.t("bar.theWidgetTheCentreSection")
       value: page.app.barState.centerAnchor !== undefined ? String(page.app.barState.centerAnchor) : ""
       options: page.app.barWidgetIds()
       searchable: true
@@ -113,9 +113,9 @@ Ui.SectionBody {
   // which place in it.
   Repeater {
     model: [
-      { key: "left", title: "Left" },
-      { key: "center", title: "Center" },
-      { key: "right", title: "Right" }
+      { key: "left", title: Ui.Strings.t("bar.left") },
+      { key: "center", title: Ui.Strings.t("bar.center") },
+      { key: "right", title: Ui.Strings.t("bar.right") }
     ]
 
     delegate: Ui.SettingGroup {
@@ -124,7 +124,7 @@ Ui.SectionBody {
       readonly property string sectionKey: modelData.key
       width: parent.width
       title: modelData.title
-      note: page.widgets(modelData.key).length === 0 ? "Nothing here yet." : ""
+      note: page.widgets(modelData.key).length === 0 ? Ui.Strings.t("bar.nothingHere") : ""
 
       Repeater {
         model: page.widgets(sectionGroup.modelData.key)
@@ -154,7 +154,7 @@ Ui.SectionBody {
           }
 
           width: parent.width
-          label: isSpacer ? "Spacer" : page.widgetName(modelData)
+          label: isSpacer ? Ui.Strings.t("bar.spacer") : page.widgetName(modelData)
           // The width was the description while there was nowhere else to
           // say it. The slider reads it out now, so the row says what every
           // other row in the list says: which widget this is.
@@ -162,7 +162,7 @@ Ui.SectionBody {
 
           // The width is the only thing a spacer has, so the cursor edits it
           // directly rather than making the reader reach for the buttons.
-          navKeys: isSpacer ? [{ key: "←→", label: "Width" }] : []
+          navKeys: isSpacer ? [{ key: "←→", label: Ui.Strings.t("common.width") }] : []
           onNavStep: function(delta) {
             if (widgetRow.isSpacer) widgetRow.setSize(widgetRow.effective + delta * 4)
           }
@@ -175,7 +175,7 @@ Ui.SectionBody {
           })
 
           function sectionTitle(key) {
-            return key === "left" ? "Left" : key === "center" ? "Center" : "Right"
+            return key === "left" ? Ui.Strings.t("bar.left") : key === "center" ? Ui.Strings.t("bar.center") : Ui.Strings.t("bar.right")
           }
 
           // Everything you can do to a row sits in front of its name, in the
@@ -220,7 +220,7 @@ Ui.SectionBody {
             Button {
               anchors.verticalCenter: parent.verticalCenter
               visible: !widgetRow.choosing
-              text: "Move"
+              text: Ui.Strings.t("bar.move")
               bordered: true
               foreground: Ui.Palette.foreground
               accent: Ui.Palette.accent
@@ -278,7 +278,7 @@ Ui.SectionBody {
             Button {
               anchors.verticalCenter: parent.verticalCenter
               visible: widgetRow.isSpacer && !widgetRow.choosing
-              text: "Remove"
+              text: Ui.Strings.t("common.remove")
               bordered: true
               foreground: Ui.Palette.foreground
               accent: Ui.Palette.accent
@@ -290,7 +290,7 @@ Ui.SectionBody {
             Button {
               anchors.verticalCenter: parent.verticalCenter
               visible: !widgetRow.isSpacer && !widgetRow.choosing
-              text: "Disable"
+              text: Ui.Strings.t("bar.disable")
               bordered: true
               foreground: Ui.Palette.foreground
               accent: Ui.Palette.accent
@@ -349,13 +349,13 @@ Ui.SectionBody {
     Ui.SettingRow {
       id: addSpacer
       width: parent.width
-      label: "Add spacer"
-      description: "Blank space, as wide as you set it. Add as many as you like."
+      label: Ui.Strings.t("bar.addSpacer")
+      description: Ui.Strings.t("bar.blankSpaceAsWideAs")
       // The same column as the rows above, so this name lines up with theirs.
       leadingWidth: page.controlsWidth
 
       property bool choosing: false
-      navKeys: [{ key: "↵", label: "Add" }]
+      navKeys: [{ key: "↵", label: Ui.Strings.t("common.add") }]
       onNavActivate: addSpacer.choosing = true
 
       // Everything you can do sits in front of the name here too, so this row
@@ -366,7 +366,7 @@ Ui.SectionBody {
         Button {
           anchors.verticalCenter: parent.verticalCenter
           visible: !addSpacer.choosing
-          text: "Add"
+          text: Ui.Strings.t("common.add")
           bordered: true
           foreground: Ui.Palette.foreground
           accent: Ui.Palette.accent
@@ -380,7 +380,7 @@ Ui.SectionBody {
           delegate: Button {
             required property var modelData
             anchors.verticalCenter: parent.verticalCenter
-            text: modelData === "left" ? "Left" : modelData === "center" ? "Center" : "Right"
+            text: modelData === "left" ? Ui.Strings.t("bar.left") : modelData === "center" ? Ui.Strings.t("bar.center") : Ui.Strings.t("bar.right")
             bordered: true
             foreground: Ui.Palette.foreground
             accent: Ui.Palette.accent
@@ -414,10 +414,10 @@ Ui.SectionBody {
   // and does not.
   Ui.SettingGroup {
     rowSpacing: Style.space(2)
-    title: "Disabled"
+    title: Ui.Strings.t("bar.disabled")
     note: page.offWidgets.length === 0
-      ? "Every widget you have is in the bar."
-      : "These keep their settings and their old place until they are enabled again."
+      ? Ui.Strings.t("bar.allInBar")
+      : Ui.Strings.t("bar.disabledNote")
 
     Repeater {
       model: page.offWidgets
@@ -425,7 +425,7 @@ Ui.SectionBody {
       delegate: Ui.WidgetRow {
         required property var modelData
         width: parent.width
-        buttonText: "Enable"
+        buttonText: Ui.Strings.t("bar.enable")
         label: String(modelData.name)
         detail: String(modelData.id)
         onTriggered: page.app.run(["bar", "enable", String(modelData.id)])

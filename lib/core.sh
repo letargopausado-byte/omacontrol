@@ -16,6 +16,60 @@ MANAGED_MARKER="omacontrol:managed"
 
 die() { echo "omacontrol: $*" >&2; exit 1; }
 
+# The catalog the window is reading right now, as one object: English, under
+# the base language, under the reader's own. It has to be the same layering
+# `Commons.Translations` does, picked from the same file, or the search would
+# count matches in one language while the rows on screen are in another.
+i18n_layers() {
+  local dir="$OMACONTROL_LIB/../i18n" lang='' base
+  local file=${OMARCHY_LANGUAGE_FILE:-${XDG_CONFIG_HOME:-$HOME_DIR/.config}/omarchy/language}
+  [[ -r $file ]] && read -r lang <"$file"
+  lang=${lang//[[:space:]]/}
+  [[ $lang =~ ^[a-z]{2,3}(-[A-Za-z]{2})?$ ]] || lang=en
+  base=${lang%%-*}
+  printf '%s\n' "$dir/en.json"
+  [[ $base != en && $base != "$lang" && -f $dir/$base.json ]] && printf '%s\n' "$dir/$base.json"
+  [[ $lang != en && -f $dir/$lang.json ]] && printf '%s\n' "$dir/$lang.json"
+  return 0
+}
+
+I18N_MERGE='add | map_values(if type == "object" then .other else . end)'
+
+i18n_catalog() {
+  local -a layers
+  mapfile -t layers < <(i18n_layers)
+  jq -s "$I18N_MERGE" "${layers[@]}"
+}
+
+# A string from that catalog, with %1, %2… filled from the arguments. The
+# catalog is read once per call of this script and only by one that has
+# something to say; a reader that forks (`par_run`) calls `i18n_load` first,
+# or every child pays for its own read.
+declare -gA I18N=()
+I18N_LOADED=false
+i18n_load() {
+  $I18N_LOADED && return
+  local -a layers
+  mapfile -t layers < <(i18n_layers)
+  # One assignment rather than a `read` loop: read takes a pipe a byte at a
+  # time, which was thirty milliseconds of every state read for a thousand
+  # keys. Each key and value arrives quoted by jq's @sh, so nothing in a
+  # translation can be read as code.
+  eval "I18N=($(jq -rs "$I18N_MERGE"' | to_entries[] | "[\(.key | @sh)]=\(.value | @sh)"' "${layers[@]}"))"
+  I18N_LOADED=true
+}
+
+t() {
+  i18n_load
+  local text=${I18N[$1]:-$1} n=1 arg
+  shift
+  for arg in "$@"; do
+    text=${text//%$n/$arg}
+    n=$((n + 1))
+  done
+  printf '%s' "$text"
+}
+
 # A program's command line is readable by every user on the machine, through
 # /proc/<pid>/cmdline, for as long as it runs. jq takes its variables there, and
 # what this window hands it is often a document read from a private file:

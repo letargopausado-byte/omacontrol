@@ -56,8 +56,8 @@ Ui.SectionBody {
   readonly property var portNames: ({
     "22": "SSH",
     "53": "DNS",
-    "80": "Web",
-    "443": "Web",
+    "80": Ui.Strings.t("security.web"),
+    "443": Ui.Strings.t("security.web"),
     "53317": "LocalSend"
   })
 
@@ -67,62 +67,62 @@ Ui.SectionBody {
   }
 
   function listeningText(rule) {
-    if (rule.container === true) return "Container at " + rule.to
+    if (rule.container === true) return Ui.Strings.t("security.containerAt").arg(rule.to)
     if (rule.by.length > 0) return rule.by.join(", ")
-    if (rule.otherUser === true) return "Another user's program"
-    if (rule.unnamed === true) return "A system service"
-    if (rule.localOnly === true) return "Only this machine"
-    return "Nothing"
+    if (rule.otherUser === true) return Ui.Strings.t("security.anotherUser")
+    if (rule.unnamed === true) return Ui.Strings.t("security.systemService")
+    if (rule.localOnly === true) return Ui.Strings.t("security.onlyThisMachine")
+    return Ui.Strings.t("security.nothing")
   }
 
   Ui.SettingGroup {
-    title: "Firewall"
+    title: Ui.Strings.t("security.firewall")
     visible: !searchEmpty && page.polled
 
     // What the rules below sit on top of. A firewall that is off, or one
     // whose default lets everything in, makes the list of open ports
     // meaningless, so that is said here rather than under the table.
     Ui.ReadingRow {
-      label: "Incoming connections"
+      label: Ui.Strings.t("security.incomingConnections")
       description: {
-        if (!page.firewallOn && page.otherFirewall !== "") return "Its rules can only be read with an administrator's password."
-        if (!page.firewallOn) return "Every program listening on the network can be reached by anyone on it."
+        if (!page.firewallOn && page.otherFirewall !== "") return Ui.Strings.t("security.rulesNeedPassword")
+        if (!page.firewallOn) return Ui.Strings.t("security.everyoneCanReach")
         var parts = []
-        if (page.letsAllIn) parts.push("Anything a rule below does not turn away is let in.")
+        if (page.letsAllIn) parts.push(Ui.Strings.t("security.letsAllIn"))
         if (page.security.dockerOpen === true)
-          parts.push("Ports Docker publishes for its containers are open to the network whatever is listed here.")
+          parts.push(Ui.Strings.t("security.dockerOpen"))
         return parts.join(" ")
       }
-      value: !page.firewallOn && page.otherFirewall !== "" ? "Managed by " + page.otherFirewall
-        : page.security.installed !== true ? "All · no firewall"
-        : !page.firewallOn ? "All · firewall off"
-        : page.letsAllIn ? "All" : ""
+      value: !page.firewallOn && page.otherFirewall !== "" ? Ui.Strings.t("security.managedBy").arg(page.otherFirewall)
+        : page.security.installed !== true ? Ui.Strings.t("security.allNoFirewall")
+        : !page.firewallOn ? Ui.Strings.t("security.allFirewallOff")
+        : page.letsAllIn ? Ui.Strings.t("security.all") : ""
     }
 
     Ui.DataTable {
       visible: page.showsRules
       columns: [
-        { title: "Port", weight: 1 },
-        { title: "For", weight: 1.4 },
-        { title: "Protocol", weight: 1 },
-        { title: "Allowed from", weight: 1.6 },
-        { title: "Listening", weight: 1.4 }
+        { title: Ui.Strings.t("security.port"), weight: 1 },
+        { title: Ui.Strings.t("security.for"), weight: 1.4 },
+        { title: Ui.Strings.t("security.protocol"), weight: 1 },
+        { title: Ui.Strings.t("security.allowedFrom"), weight: 1.6 },
+        { title: Ui.Strings.t("security.listening"), weight: 1.4 }
       ]
       emptyNote: page.security.rulesReadable === false
-        ? "The firewall's rules could not be read." : "No ports are open."
+        ? Ui.Strings.t("security.rulesUnreadable") : Ui.Strings.t("security.noPorts")
       rows: {
         var out = []
         for (var i = 0; i < page.rules.length; i++) {
           var r = page.rules[i]
-          var from = r.from === "any" ? "Anywhere" : String(r.from)
-          if (r.interface !== "") from = r.from === "any" ? "Over " + r.interface : from + " over " + r.interface
+          var from = r.from === "any" ? Ui.Strings.t("security.anywhere") : String(r.from)
+          if (r.interface !== "") from = r.from === "any" ? Ui.Strings.t("security.overInterface").arg(r.interface) : Ui.Strings.t("security.fromOverInterface").arg(from).arg(r.interface)
           // Rate-limited: six attempts in thirty seconds from one address and
           // the rest are dropped, which is what keeps a password-guesser off.
-          if (r.action === "limit") from += ", rate-limited"
+          if (r.action === "limit") from = Ui.Strings.t("security.rateLimited").arg(from)
           out.push({ cells: [
-            { text: r.port === "any" ? "All"
+            { text: r.port === "any" ? Ui.Strings.t("security.all")
                 : String(r.port).replace(/:/g, "\u2013").replace(/,/g, ", "), strong: true },
-            { text: r.container === true ? "Container"
+            { text: r.container === true ? Ui.Strings.t("security.container")
                 : r.app !== "" ? String(r.app)
                 : (page.portNames[r.port] !== undefined ? page.portNames[r.port] : ""),
               tag: String(r.comment || "") },
@@ -137,30 +137,30 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Signing in"
+    title: Ui.Strings.t("security.signingIn")
     visible: !searchEmpty && page.polled
 
     // Only where there is a reader: the setup cannot do anything without
     // one, and a row offering it on a desktop is a row that can only fail.
     Ui.ActionRow {
-      label: "Fingerprint"
+      label: Ui.Strings.t("security.fingerprint")
       visible: !searchHidden && (page.way("fingerprint").available || page.way("fingerprint").active)
         && (page.way("fingerprint").canSetup || page.way("fingerprint").canRemove)
       description: page.way("fingerprint").active
-        ? "Set up · unlocks the screen and approves admin prompts"
-        : "Not set up · the reader here can unlock the screen and approve admin prompts"
-      buttonText: page.way("fingerprint").active ? "Remove…" : "Set up…"
+        ? Ui.Strings.t("security.fingerprintOn")
+        : Ui.Strings.t("security.fingerprintOff")
+      buttonText: page.way("fingerprint").active ? Ui.Strings.t("security.removeEllipsis") : Ui.Strings.t("security.setUpEllipsis")
       actionEnabled: page.canRun("fingerprint")
       onTriggered: { page.app.run(["menu", "run", page.entryFor("fingerprint")]); page.app.hide() }
     }
 
     Ui.ActionRow {
-      label: "FIDO2 security key"
+      label: Ui.Strings.t("security.fido2SecurityKey")
       visible: !searchHidden && (page.way("fido2").canSetup || page.way("fido2").canRemove)
       description: page.way("fido2").active
-        ? "Set up · a touch of the key approves admin prompts"
-        : "Not set up · a touch of a key can approve admin prompts"
-      buttonText: page.way("fido2").active ? "Remove…" : "Set up…"
+        ? Ui.Strings.t("security.fido2On")
+        : Ui.Strings.t("security.fido2Off")
+      buttonText: page.way("fido2").active ? Ui.Strings.t("security.removeEllipsis") : Ui.Strings.t("security.setUpEllipsis")
       actionEnabled: page.canRun("fido2")
       onTriggered: { page.app.run(["menu", "run", page.entryFor("fido2")]); page.app.hide() }
     }
@@ -169,14 +169,14 @@ Ui.SectionBody {
     // takes keys only cannot be guessed into. When a config file in the way
     // could not be read, the page says the server is on and stops there.
     Ui.ActionRow {
-      label: "SSH server"
+      label: Ui.Strings.t("security.sshServer")
       visible: !searchHidden && (page.way("sshd").canSetup || page.way("sshd").canRemove || page.way("sshd").active)
       description: !page.way("sshd").active
-        ? "Off · lets another computer sign in to this one with a key you authorize, and opens its port"
-        : page.way("sshd").passwords === false ? "On · accepts sign-ins from authorized keys only"
-        : page.way("sshd").passwords === true ? "On · accepts a password as well as a key"
-        : "On · accepts sign-ins from other computers"
-      buttonText: page.way("sshd").active ? "Turn off…" : "Set up…"
+        ? Ui.Strings.t("security.sshOff")
+        : page.way("sshd").passwords === false ? Ui.Strings.t("security.sshKeysOnly")
+        : page.way("sshd").passwords === true ? Ui.Strings.t("security.sshPasswords")
+        : Ui.Strings.t("security.sshOn")
+      buttonText: page.way("sshd").active ? Ui.Strings.t("security.turnOffEllipsis") : Ui.Strings.t("security.setUpEllipsis")
       actionEnabled: page.canRun("sshd")
       onTriggered: { page.app.run(["menu", "run", page.entryFor("sshd")]); page.app.hide() }
     }

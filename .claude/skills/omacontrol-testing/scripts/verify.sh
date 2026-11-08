@@ -32,6 +32,9 @@ echo "checked $(ls lib/*.sh 2>/dev/null | wc -l) modules and 2 scripts"
 step "qmllint (Qt 6)"
 "$here/lint-qml.sh" || fail=1
 
+step "catalogs"
+python3 "$here/i18n-check.py" || fail=1
+
 since=$(date '+%Y-%m-%d %H:%M:%S')
 
 step "restart shell — the bar is dead for about seven seconds"

@@ -74,16 +74,16 @@ Item {
     // While the prompt is open the row's keys are the prompt's, since that is
     // what the keyboard is actually in.
     navKeys: wifiRow.prompting
-        ? [{ key: "↵", label: "Connect" }, { key: "esc", label: "Cancel" }]
-      : wifiRow.active ? [{ key: "Space", label: "Disconnect" }]
-      : (wifiRow.needsPassword ? [{ key: "Space", label: "Passphrase" }]
-                               : [{ key: "Space", label: "Connect" }])
+        ? [{ key: "↵", label: Local.Strings.t("ui.wifiRow.connect") }, { key: "esc", label: Local.Strings.t("common.cancel") }]
+      : wifiRow.active ? [{ key: "Space", label: Local.Strings.t("common.disconnect") }]
+      : (wifiRow.needsPassword ? [{ key: "Space", label: Local.Strings.t("ui.wifiRow.passphrase") }]
+                               : [{ key: "Space", label: Local.Strings.t("ui.wifiRow.connect") }])
     // Forgetting a saved network is the second thing there is to do to one,
     // and it was reachable only by hovering it — invisible to the keyboard
     // and to anyone who never happened to hover. ⌫ is where this window puts
     // "undo what you did to this row"; on a network that is Forget.
     changed: wifiRow.saved && !wifiRow.active && !wifiRow.prompting
-    navResetLabel: "Forget"
+    navResetLabel: Local.Strings.t("ui.wifiRow.forget")
     onResetRequested: wifiRow.forgetRequested()
     onNavActivate: {
       if (wifiRow.active) wifiRow.disconnectRequested()
@@ -174,7 +174,7 @@ Item {
         textFormat: Text.PlainText
         anchors.verticalCenter: parent.verticalCenter
         visible: wifiRow.connecting
-        text: "Connecting…"
+        text: Local.Strings.t("ui.wifiRow.connecting")
         color: Local.Palette.accent
         font.family: Local.Palette.fontFamily
         font.pixelSize: Style.font.caption
@@ -183,7 +183,7 @@ Item {
       Button {
         anchors.verticalCenter: parent.verticalCenter
         visible: wifiRow.active && !wifiRow.connecting
-        text: "Disconnect"
+        text: Local.Strings.t("common.disconnect")
         bordered: true
         foreground: Local.Palette.foreground
         accent: Local.Palette.accent
@@ -198,7 +198,7 @@ Item {
         // reachable both ways, so its actions have to be visible both ways.
         visible: wifiRow.saved && !wifiRow.active && !wifiRow.connecting
           && (wifiMouse.containsMouse || nav.current)
-        text: "Forget"
+        text: Local.Strings.t("ui.wifiRow.forget")
         bordered: true
         foreground: Local.Palette.foreground
         accent: Local.Palette.accent
@@ -241,7 +241,7 @@ Item {
         textFormat: Text.PlainText
         anchors.verticalCenter: parent.verticalCenter
         visible: wifiRow.saved && !wifiRow.connecting
-        text: "Saved"
+        text: Local.Strings.t("ui.wifiRow.saved")
         color: Local.Palette.accent
         font.family: Local.Palette.fontFamily
         font.pixelSize: Style.font.caption
@@ -279,7 +279,7 @@ Item {
     TextField {
       id: passwordField
       width: parent.width - connectButton.width - Style.space(8)
-      placeholderText: "Password for " + wifiRow.ssid
+      placeholderText: Local.Strings.t("ui.wifiRow.passwordFor").arg(wifiRow.ssid)
       password: true
       foreground: Local.Palette.foreground
       accent: Local.Palette.accent
@@ -308,7 +308,7 @@ Item {
     Button {
       id: connectButton
       anchors.verticalCenter: parent.verticalCenter
-      text: "Connect"
+      text: Local.Strings.t("ui.wifiRow.connect")
       bordered: true
       // Nothing to send yet, and a button that answers a click with silence
       // is worse than one that says it is not ready.

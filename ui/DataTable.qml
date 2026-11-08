@@ -72,7 +72,7 @@ Column {
   // the keyboard this window is otherwise driven by.
   property bool navigable: false
   // What ⏎ does to a row, for the legend.
-  property string rowActionLabel: "Open"
+  property string rowActionLabel: Local.Strings.t("common.open")
   // Drawn at the right of the row the pointer is on, or of the row the cursor
   // is on: the affordance the mouse needs, where a mouse is already looking.
   // The first is a hint and never the only way in — the whole row takes the
@@ -84,7 +84,7 @@ Column {
   // land on top of the button on exactly the rows that have one.
   property var rowActions: []
   signal rowAction(int index, string id)
-  property string emptyNote: "Nothing here."
+  property string emptyNote: Local.Strings.t("ui.dataTable.nothingHere")
 
   // A cell given `tree: { depth, lines, last, folded }` draws btop's guides
   // in front of its text: an elbow into the row from its parent, and a line

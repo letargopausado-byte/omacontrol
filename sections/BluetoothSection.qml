@@ -41,8 +41,8 @@ Ui.SectionBody {
   // The lists below say what is connected; the header only says whether the
   // adapter is on at all.
   readonly property string headerNote: {
-    if (bluetooth.available === false) return "No adapter"
-    return bluetooth.powered === true ? "" : "Off"
+    if (bluetooth.available === false) return Ui.Strings.t("bluetooth.noAdapter")
+    return bluetooth.powered === true ? "" : Ui.Strings.t("common.off")
   }
 
   // Devices come and go while you are looking at them, and discovery is a
@@ -58,7 +58,7 @@ Ui.SectionBody {
 
   Ui.SettingGroup {
     rowSpacing: Style.space(2)
-    title: "Connected"
+    title: Ui.Strings.t("bluetooth.connected")
     visible: !searchEmpty && page.bluetooth.powered === true && page.connectedDevices.length > 0
 
     Repeater {
@@ -69,7 +69,7 @@ Ui.SectionBody {
 
   Ui.SettingGroup {
     rowSpacing: Style.space(2)
-    title: "Paired"
+    title: Ui.Strings.t("bluetooth.paired")
     visible: !searchEmpty && page.bluetooth.powered === true && page.pairedDevices.length > 0
 
     Repeater {
@@ -80,7 +80,7 @@ Ui.SectionBody {
 
   Ui.SettingGroup {
     rowSpacing: Style.space(2)
-    title: "Nearby"
+    title: Ui.Strings.t("bluetooth.nearby")
     visible: !searchEmpty && page.bluetooth.powered === true
 
     Repeater {
@@ -92,14 +92,14 @@ Ui.SectionBody {
   // At the foot rather than the top: pairing usually starts from this
   // machine, and only the other direction needs this.
   Ui.SettingGroup {
-    title: "This computer"
+    title: Ui.Strings.t("bluetooth.thisComputer")
     visible: !searchEmpty && page.bluetooth.powered === true
 
     Ui.SwitchRow {
-      label: "Let other devices find this one"
+      label: Ui.Strings.t("bluetooth.letOtherDevicesFindThis")
       description: page.bluetooth.adapter !== undefined && page.bluetooth.adapter !== ""
-        ? "Phones and headsets pairing from their own side see it as \u201c" + page.bluetooth.adapter + "\u201d. Switches itself off again after a few minutes."
-        : "Needed only when the other device is doing the pairing. Switches itself off again after a few minutes."
+        ? Ui.Strings.t("bluetooth.discoverableAs").arg(page.bluetooth.adapter)
+        : Ui.Strings.t("bluetooth.discoverableNote")
       checked: page.bluetooth.discoverable === true
       onRequested: function(next) { page.app.run(["bluetooth", "discoverable", next ? "on" : "off"]) }
     }

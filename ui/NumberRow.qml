@@ -31,7 +31,7 @@ Local.SettingRow {
     if (value === pending || value !== basis) stepping = false
   }
 
-  navKeys: [{ key: "\u2190\u2192", label: "Adjust" }]
+  navKeys: [{ key: "\u2190\u2192", label: Local.Strings.t("common.adjust") }]
 
   function commit(next) {
     var wanted = Math.max(numberRow.from, Math.min(numberRow.to, Math.round(next)))

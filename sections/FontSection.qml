@@ -14,9 +14,9 @@ Ui.SectionBody {
 
   Ui.SettingGroup {
     Ui.NumberRow {
-      label: "Text size"
-      description: "Scales the shell, GTK apps, and terminals together."
-      suffix: "px"
+      label: Ui.Strings.t("font.textSize")
+      description: Ui.Strings.t("font.scalesTheShellGtkApps")
+      suffix: Ui.Strings.t("common.px")
       value: page.app.state.textScale !== undefined ? Number(page.app.state.textScale) : 12
       from: 9
       to: 20
@@ -31,7 +31,7 @@ Ui.SectionBody {
   // read identically when both are printed in the font you already have.
   //
   Ui.SettingGroup {
-    title: "Font"
+    title: Ui.Strings.t("font.font")
     visible: !searchEmpty
 
     Repeater {

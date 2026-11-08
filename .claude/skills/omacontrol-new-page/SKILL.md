@@ -35,13 +35,15 @@ expensive mistake:
 
 **3. `sections/<Thing>Section.qml`** — the page itself. It knows what its
 settings mean and calls `app` to read and write them; it never shells out.
+Every word on it is a key, `Ui.Strings.t("<thing>.someLabel")`, with its
+English in `i18n/en.json` — see `.claude/rules/i18n.md`.
 
 **4. `SettingsWindow.qml`, four places:**
 
 | Where | What |
 | --- | --- |
 | `sectionSource(id)` | `case "<id>": return "sections/<Thing>Section.qml"` |
-| `pageTitles` | the page's name as the reader sees it |
+| `pageTitles` | the page's name as the reader sees it, as `Ui.Strings.t("page.<id>")` |
 | `navBlocks` | the sidebar item, or another page in an existing item's `pages` |
 | `pageAvailable(id)` | only if the page can be absent — an application you may not have |
 

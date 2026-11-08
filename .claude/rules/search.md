@@ -34,6 +34,9 @@ added is in the index without a second list to update. The function lives in
 (`par_run searchsources search_index`) and merges its answer with what the
 running system contributes.
 
+The sources hold catalog keys rather than words, so the index resolves each
+key in the reader's language before it is counted — see `i18n.md`.
+
 The index arrives with the state, not from a call of its own, because half of
 it is the state: a page that is a list of things — this keyboard, that
 network, your bindings, the plugins you have — can only be described by the

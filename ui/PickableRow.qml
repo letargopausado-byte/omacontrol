@@ -19,7 +19,7 @@ Item {
     id: nav
     anchors.fill: parent
     searchText: pickableRow.label + " " + pickableRow.detail
-    navKeys: [{ key: "Space", label: "Select" }]
+    navKeys: [{ key: "Space", label: Local.Strings.t("ui.pickableRow.select") }]
     onNavActivate: pickableRow.picked()
   }
 

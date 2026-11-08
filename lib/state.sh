@@ -158,6 +158,7 @@ state_slice() {
 # independent questions as much as two producers are.
 state_slices() {
   local name out
+  i18n_load
   par_begin
   for name in "$@"; do
     par_run "$name" state_slice "$name"
@@ -193,6 +194,7 @@ state() {
   # it rather than each subshell parsing the menu again and losing it.
   heal_managed_lua
   menu_entries >/dev/null
+  i18n_load
 
   par_begin
   par_run themes state_themes
@@ -278,19 +280,23 @@ state() {
     --argjson bindings "${bindings:-{\}}" \
     --argjson workspaces "${workspaces:-{\}}" \
     --argjson plugins "${plugins:-[]}" \
-    --argjson monitors "${monitors:-[]}" '''
+    --argjson monitors "${monitors:-[]}" \
+    --arg output "$(t audio.output)" --arg input "$(t audio.input)" \
+    --arg keybindings "$(t page.bindings)" --arg applications "$(t workspaces.applications)" \
+    --arg workspacesGroup "$(t page.workspaces)" --arg pluginsGroup "$(t page.plugins)" \
+    --arg displaysGroup "$(t page.displays)" '''
     def entries(list; groupName; labelKey; descKey):
       [ list[]? | { group: groupName,
                     label: (.[labelKey] // "" | tostring),
                     description: (.[descKey] // "" | tostring) }
         | select(.label != "") ];
-    { audio: (entries($audio.outputs; "Output"; "description"; "name")
-              + entries($audio.inputs; "Input"; "description"; "name")),
-      bindings: entries($bindings.items; "Keybindings"; "keys"; "description"),
-      workspaces: (entries($workspaces.rules; "Applications"; "name"; "class")
-                   + entries($workspaces.setups; "Workspaces"; "label"; "name")),
-      plugins: entries($plugins; "Plugins"; "name"; "id"),
-      displays: entries($monitors; "Displays"; "label"; "name") }'''))
+    { audio: (entries($audio.outputs; $output; "description"; "name")
+              + entries($audio.inputs; $input; "description"; "name")),
+      bindings: entries($bindings.items; $keybindings; "keys"; "description"),
+      workspaces: (entries($workspaces.rules; $applications; "name"; "class")
+                   + entries($workspaces.setups; $workspacesGroup; "label"; "name")),
+      plugins: entries($plugins; $pluginsGroup; "name"; "id"),
+      displays: entries($monitors; $displaysGroup; "label"; "name") }'''))
 
   jq -cn \
     --argjson cfg "$cfg" \

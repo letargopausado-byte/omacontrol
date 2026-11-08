@@ -12,11 +12,11 @@ Ui.SectionBody {
   readonly property bool barOn: app.hyprValue("groupbar", true) === true
 
   Ui.SettingGroup {
-    title: "Group bar"
+    title: Ui.Strings.t("groups.groupBar")
 
     Ui.SwitchRow {
-      label: "Group bar"
-      description: "Shows the tab strip on grouped windows."
+      label: Ui.Strings.t("groups.groupBar")
+      description: Ui.Strings.t("groups.showsTheTabStripOn")
       checked: page.barOn
       onRequested: function(next) { page.app.setHypr("groupbar", next ? "true" : "false") }
       changed: page.app.isChanged("groupbar")
@@ -24,8 +24,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Height"
-      suffix: "px"
+      label: Ui.Strings.t("groups.height")
+      suffix: Ui.Strings.t("common.px")
       enabled: page.barOn
       value: page.app.hyprValue("groupbar-height", 14)
       from: 0
@@ -36,8 +36,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Font size"
-      suffix: "px"
+      label: Ui.Strings.t("groups.fontSize")
+      suffix: Ui.Strings.t("common.px")
       enabled: page.barOn
       value: page.app.hyprValue("groupbar-font-size", 8)
       from: 6
@@ -48,8 +48,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Show titles"
-      description: "Draws window titles in the tabs."
+      label: Ui.Strings.t("groups.showTitles")
+      description: Ui.Strings.t("groups.drawsWindowTitlesInThe")
       enabled: page.barOn
       checked: page.app.hyprValue("groupbar-render-titles", true) === true
       onRequested: function(next) { page.app.setHypr("groupbar-render-titles", next ? "true" : "false") }
@@ -58,9 +58,9 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Indicator height"
-      description: "Thickness of the active-tab indicator."
-      suffix: "px"
+      label: Ui.Strings.t("groups.indicatorHeight")
+      description: Ui.Strings.t("groups.thicknessOfTheActiveTab")
+      suffix: Ui.Strings.t("common.px")
       enabled: page.barOn
       value: page.app.hyprValue("groupbar-indicator-height", 3)
       from: 0
@@ -71,9 +71,9 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Rounding"
-      description: "Corner radius of the tabs."
-      suffix: "px"
+      label: Ui.Strings.t("groups.rounding")
+      description: Ui.Strings.t("groups.cornerRadiusOfTheTabs")
+      suffix: Ui.Strings.t("common.px")
       enabled: page.barOn
       value: page.app.hyprValue("groupbar-rounding", 1)
       from: 0
@@ -84,8 +84,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Gradients"
-      description: "Fades the tab backgrounds."
+      label: Ui.Strings.t("groups.gradients")
+      description: Ui.Strings.t("groups.fadesTheTabBackgrounds")
       enabled: page.barOn
       checked: page.app.hyprValue("groupbar-gradients", false) === true
       onRequested: function(next) { page.app.setHypr("groupbar-gradients", next ? "true" : "false") }
@@ -94,8 +94,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Stacked"
-      description: "Lays the tabs out vertically."
+      label: Ui.Strings.t("groups.stacked")
+      description: Ui.Strings.t("groups.laysTheTabsOutVertically")
       enabled: page.barOn
       checked: page.app.hyprValue("groupbar-stacked", false) === true
       onRequested: function(next) { page.app.setHypr("groupbar-stacked", next ? "true" : "false") }
@@ -104,8 +104,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Hide when alone"
-      description: "Hides the strip when the group has one window."
+      label: Ui.Strings.t("groups.hideWhenAlone")
+      description: Ui.Strings.t("groups.hidesTheStripWhenThe")
       enabled: page.barOn
       checked: page.app.hyprValue("groupbar-disable-when-only", false) === true
       onRequested: function(next) { page.app.setHypr("groupbar-disable-when-only", next ? "true" : "false") }

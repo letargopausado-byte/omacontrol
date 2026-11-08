@@ -17,12 +17,13 @@ Service.qml            Owns the window (loaded on first use), the `omacontrol`
                        IPC target, and the launcher entry
 SettingsWindow.qml     Window chrome, sidebar, page routing, and the state
                        every page reads. Pages reach it as `app`.
-ui/                    Presentational components + the Palette singleton
+ui/                    Presentational components + the Palette and Strings singletons
                        NavRow is the base: one row the cursor can land on.
                        SettingRow and the table rows are layouts on top of it.
 sections/              One file per page
 bin/omacontrol         Subcommand routing
 lib/                   One module per thing being configured
+i18n/                  The words: en.json, and one catalog per language
 ```
 
 Three rules keep the split honest:
@@ -111,9 +112,9 @@ put it back. The exceptions own themselves and nothing else holds them:
 ## The loop
 
 `/verify` runs it: validate the manifest, `bash -n` over `lib/` and `bin/`,
-qmllint against a recorded baseline, restart the shell, open the window, check
-it **drew** rather than merely opened, and read the journal from before the
-restart onwards.
+qmllint against a recorded baseline, check the catalogs against the code,
+restart the shell, open the window, check it **drew** rather than merely
+opened, and read the journal from before the restart onwards.
 
 QML errors surface **only** in the journal, and the ones that matter here do
 not contain the word "error" — a binding loop, an undefined reaching a
@@ -138,6 +139,7 @@ without performing one, read `render_managed_lua`.
 | `hyprland.md` `displays.md` `workspaces.md` | the compositor, monitors, window rules |
 | `reporting-pages.md` `news.md` `bar-and-plugins.md` | the pages that report, the feed, the bar and plugin lifecycle |
 | `qml.md` `navigation.md` `design.md` `search.md` | anything the reader sees or types at |
+| `i18n.md` | every word the reader sees, in a page, a component or `lib/`, and the catalogs |
 | `migration.md` | `bin/omacontrol-migrate` |
 
 A path-scoped rule fires when Claude **reads** a matching file with the Read
@@ -157,7 +159,8 @@ because these mistakes are not the kind that feel uncertain while you are
 making them. Two in particular do not announce themselves:
 
 - `design.md` for anything with a word of user-facing copy in it. Notes,
-  descriptions, headings, chip labels, empty states.
+  descriptions, headings, chip labels, empty states. And `i18n.md` beside
+  it: the word goes in `i18n/en.json`, not in the page.
 - `shell.md` for anything in `lib/`, for the `pipefail` and `index(.)` traps
   that pass every test run by hand.
 

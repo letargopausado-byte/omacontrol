@@ -26,7 +26,7 @@ SettingRow {
   // Space opens the list, the way clicking the control would; stepping picks
   // a neighbour without opening anything. While the list is open it owns the
   // keyboard — its own Up/Down and Escape are the ones that should run.
-  navKeys: [{ key: "Space", label: "Open list" }, { key: "\u2190\u2192", label: "Choose" }]
+  navKeys: [{ key: "Space", label: Local.Strings.t("ui.pickerRow.openList") }, { key: "\u2190\u2192", label: Local.Strings.t("ui.pickerRow.choose") }]
 
   onNavActivate: if (dropdownLoader.item) dropdownLoader.item.open()
   navBlocking: dropdownLoader.item ? dropdownLoader.item.popupOpen === true : false
@@ -65,7 +65,7 @@ SettingRow {
       width: parent ? parent.width : 0
       showLabel: false
       fontFamily: Local.Palette.fontFamily
-      placeholderText: "Search…"
+      placeholderText: Local.Strings.t("ui.pickerRow.search")
       value: pickerRow.value
       options: pickerRow.normalized
       onChanged: function(next) { pickerRow.picked(next) }

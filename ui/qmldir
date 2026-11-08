@@ -2,6 +2,7 @@
 # its types from this file alone on Qt 6.12, and a sibling missing here is
 # "not a type" to every page that uses it — the window draws an empty body.
 singleton Palette Palette.qml
+singleton Strings Strings.qml
 ActionRow ActionRow.qml
 AppRules AppRules.qml
 AsciiPreview AsciiPreview.qml

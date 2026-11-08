@@ -1,6 +1,6 @@
 ---
 description: Lint OmaControl without restarting the shell — manifest, bash syntax, Qt 6 qmllint
-allowed-tools: Bash(cd:*), Bash(omarchy plugin validate:*), Bash(bash -n:*), Bash(.claude/skills/omacontrol-testing/scripts/lint-qml.sh:*)
+allowed-tools: Bash(cd:*), Bash(omarchy plugin validate:*), Bash(bash -n:*), Bash(.claude/skills/omacontrol-testing/scripts/lint-qml.sh:*), Bash(python3 .claude/skills/omacontrol-testing/scripts/i18n-check.py:*)
 ---
 
 Manifest and shell syntax:
@@ -10,6 +10,11 @@ Manifest and shell syntax:
 Qt 6 qmllint:
 
 !`cd "${CLAUDE_PROJECT_DIR:-$PWD}" && .claude/skills/omacontrol-testing/scripts/lint-qml.sh 2>&1 | tail -25 || true`
+
+Catalogs — every key used exists, nothing unused, translations keep their
+`%1` holes, and no page has words written straight into it:
+
+!`cd "${CLAUDE_PROJECT_DIR:-$PWD}" && python3 .claude/skills/omacontrol-testing/scripts/i18n-check.py 2>&1 | tail -25 || true`
 
 Summarise what is wrong, if anything. The four expected classes of qmllint
 finding are counted rather than listed — a change in those counts is worth a

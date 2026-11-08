@@ -8,12 +8,12 @@ Ui.SectionBody {
   id: page
   property var app: null
   Ui.SettingGroup {
-    title: "Layout"
-    note: "Add several layouts separated by commas, then set a shortcut to switch under Options."
+    title: Ui.Strings.t("common.layout")
+    note: Ui.Strings.t("keyboard.addSeveralLayoutsSeparatedBy")
 
     Ui.TextRow {
-      label: "Layouts"
-      placeholder: "us,se"
+      label: Ui.Strings.t("keyboard.layouts")
+      placeholder: Ui.Strings.t("keyboard.usSe")
       value: String(page.app.hyprValue("kb-layout", ""))
       onCommitted: function(next) { page.app.setHypr("kb-layout", next) }
       changed: page.app.isChanged("kb-layout")
@@ -21,8 +21,8 @@ Ui.SectionBody {
     }
 
     Ui.TextRow {
-      label: "Variant"
-      placeholder: "intl"
+      label: Ui.Strings.t("keyboard.variant")
+      placeholder: Ui.Strings.t("keyboard.intl")
       value: String(page.app.hyprValue("kb-variant", ""))
       onCommitted: function(next) { page.app.setHypr("kb-variant", next) }
       changed: page.app.isChanged("kb-variant")
@@ -30,8 +30,8 @@ Ui.SectionBody {
     }
 
     Ui.TextRow {
-      label: "Options"
-      placeholder: "compose:caps,grp:alts_toggle"
+      label: Ui.Strings.t("keyboard.options")
+      placeholder: Ui.Strings.t("keyboard.composeCapsGrpAltsToggle")
       value: String(page.app.hyprValue("kb-options", ""))
       onCommitted: function(next) { page.app.setHypr("kb-options", next) }
       changed: page.app.isChanged("kb-options")
@@ -40,11 +40,11 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Repeat"
+    title: Ui.Strings.t("keyboard.repeat")
 
     Ui.NumberRow {
-      label: "Repeat rate"
-      suffix: "keys/s"
+      label: Ui.Strings.t("keyboard.repeatRate")
+      suffix: Ui.Strings.t("keyboard.keysS")
       value: page.app.hyprValue("repeat-rate", 25)
       from: 1
       to: 100
@@ -54,8 +54,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Repeat delay"
-      suffix: "ms"
+      label: Ui.Strings.t("keyboard.repeatDelay")
+      suffix: Ui.Strings.t("keyboard.ms")
       value: page.app.hyprValue("repeat-delay", 600)
       from: 100
       to: 1000
@@ -66,7 +66,7 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Num lock on at login"
+      label: Ui.Strings.t("keyboard.numLockOnAtLogin")
       checked: page.app.hyprValue("numlock", false) === true
       onRequested: function(next) { page.app.setHypr("numlock", next ? "true" : "false") }
       changed: page.app.isChanged("numlock")
@@ -128,13 +128,13 @@ Ui.SectionBody {
       width: parent.width
       // Named as a device so the heading cannot be mistaken for another
       // group of settings.
-      title: "Device: " + name + (modelData.connected === false ? "  (not connected)" : "")
+      title: Ui.Strings.t("common.device").arg(modelData.connected === false ? Ui.Strings.t("common.notConnectedName").arg(name) : name)
       note: Object.keys(configured).length > 0 && !ours
-        ? "Set in your own Hyprland config."
+        ? Ui.Strings.t("common.setInYourHyprland")
         : ""
 
       Ui.TextRow {
-        label: "Layouts"
+        label: Ui.Strings.t("keyboard.layouts")
         placeholder: String(page.app.hyprValue("kb-layout", ""))
         value: String(deviceGroup.inForce("kb_layout", page.app.hyprValue("kb-layout", "")))
         onCommitted: function(next) { page.app.setDevice(deviceGroup.name, "kb_layout", next, "keyboard") }
@@ -143,7 +143,7 @@ Ui.SectionBody {
       }
 
       Ui.TextRow {
-        label: "Variant"
+        label: Ui.Strings.t("keyboard.variant")
         value: String(deviceGroup.inForce("kb_variant", page.app.hyprValue("kb-variant", "")))
         onCommitted: function(next) { page.app.setDevice(deviceGroup.name, "kb_variant", next, "keyboard") }
         changed: page.app.isChanged("kb-variant")
@@ -151,7 +151,7 @@ Ui.SectionBody {
       }
 
       Ui.TextRow {
-        label: "Options"
+        label: Ui.Strings.t("keyboard.options")
         value: String(deviceGroup.inForce("kb_options", page.app.hyprValue("kb-options", "")))
         onCommitted: function(next) { page.app.setDevice(deviceGroup.name, "kb_options", next, "keyboard") }
         changed: page.app.isChanged("kb-options")
@@ -159,8 +159,8 @@ Ui.SectionBody {
       }
 
       Ui.NumberRow {
-        label: "Repeat rate"
-        suffix: "keys/s"
+        label: Ui.Strings.t("keyboard.repeatRate")
+        suffix: Ui.Strings.t("keyboard.keysS")
         from: 1
         to: 100
         value: Number(deviceGroup.inForce("repeat_rate", page.app.hyprValue("repeat-rate", 25)))
@@ -170,8 +170,8 @@ Ui.SectionBody {
       }
 
       Ui.NumberRow {
-        label: "Repeat delay"
-        suffix: "ms"
+        label: Ui.Strings.t("keyboard.repeatDelay")
+        suffix: Ui.Strings.t("keyboard.ms")
         from: 100
         to: 1000
         step: 50
@@ -186,7 +186,7 @@ Ui.SectionBody {
       Ui.ActionRow {
         readonly property bool theirs: Object.keys(deviceGroup.configured).length > 0
 
-        buttonText: "Remove Device"
+        buttonText: Ui.Strings.t("keyboard.removeDevice")
         onTriggered: {
           if (theirs) page.app.removeDevice(deviceGroup.name)
           else if (deviceGroup.ours) page.app.clearDevice(deviceGroup.name)
@@ -200,13 +200,13 @@ Ui.SectionBody {
     visible: !searchEmpty && page.untouched.length > 0
 
     Ui.PickerRow {
-      label: "Settings for one keyboard"
-      description: "Give a single keyboard its own settings, apart from the ones above."
+      label: Ui.Strings.t("keyboard.settingsForOneKeyboard")
+      description: Ui.Strings.t("keyboard.giveASingleKeyboardIts")
       value: ""
-      options: [{ value: "", label: "Pick a keyboard…" }].concat(page.untouched.map(function(device) {
+      options: [{ value: "", label: Ui.Strings.t("keyboard.pickAKeyboard") }].concat(page.untouched.map(function(device) {
         return {
           value: String(device.name),
-          label: String(device.name) + (device.connected === false ? " (not connected)" : "")
+          label: device.connected === false ? Ui.Strings.t("common.notConnectedName").arg(String(device.name)) : String(device.name)
         }
       }))
       onPicked: function(next) { if (next !== "") page.openDevice(next) }

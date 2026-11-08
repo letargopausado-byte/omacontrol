@@ -31,7 +31,7 @@ Ui.SectionBody {
         anchors.verticalCenter: parent.verticalCenter
         visible: page.connected
         iconText: "\udb81\udc32"
-        text: "Show QR code"
+        text: Ui.Strings.t("network.showQrCode")
         bordered: true
         foreground: Ui.Palette.foreground
         accent: Ui.Palette.accent
@@ -51,7 +51,7 @@ Ui.SectionBody {
         anchors.verticalCenter: parent.verticalCenter
         visible: page.connected
         iconText: "\udb81\udcc5"
-        text: "Run speed test"
+        text: Ui.Strings.t("network.runSpeedTest")
         bordered: true
         foreground: Ui.Palette.foreground
         accent: Ui.Palette.accent
@@ -68,7 +68,7 @@ Ui.SectionBody {
         textFormat: Text.PlainText
         anchors.verticalCenter: parent.verticalCenter
         visible: page.hasRadio
-        text: "Wi-Fi"
+        text: Ui.Strings.t("network.wiFi")
         color: Ui.Palette.foreground
         font.family: Ui.Palette.fontFamily
         font.pixelSize: Style.font.caption
@@ -89,9 +89,9 @@ Ui.SectionBody {
   // Which network you are on is in the card below; the header only says
   // whether there is a radio at all and whether it is on.
   readonly property string headerNote: {
-    if (wifi.available === false) return "NetworkManager is not running"
-    if (!hasRadio) return "No wireless hardware"
-    return wifi.enabled === true ? "" : "Off"
+    if (wifi.available === false) return Ui.Strings.t("network.nmNotRunning")
+    if (!hasRadio) return Ui.Strings.t("network.noWireless")
+    return wifi.enabled === true ? "" : Ui.Strings.t("common.off")
   }
 
   // "3 927", as the mockup writes it.
@@ -112,8 +112,8 @@ Ui.SectionBody {
     // the word was on screen whenever it could be read and told nobody
     // anything. The signal leads instead, since it is the part that changes.
     if (link.signalDbm !== undefined && link.signalDbm !== null) {
-      var phrase = link.signalDbm >= -60 ? "Strong signal"
-                 : link.signalDbm >= -72 ? "Fair signal" : "Weak signal"
+      var phrase = link.signalDbm >= -60 ? Ui.Strings.t("network.strongSignal")
+                 : link.signalDbm >= -72 ? Ui.Strings.t("network.fairSignal") : Ui.Strings.t("network.weakSignal")
       // The words say what to make of it, the number says how much room there
       // is above or below. It is NetworkManager's percentage, the same one the
       // bars beside it are drawn from, so the three cannot disagree.
@@ -141,27 +141,27 @@ Ui.SectionBody {
     // The address the world sees leads, then the one this machine holds on the
     // network — and both say which they are, since "IP address" beside a
     // second address is the reader's problem to work out.
-    { key: "publicip", label: "Public IP" },
-    { key: "ip", label: "Local IP" },
-    { key: "gateway", label: "Gateway" },
+    { key: "publicip", label: Ui.Strings.t("network.publicIp") },
+    { key: "ip", label: Ui.Strings.t("network.localIp") },
+    { key: "gateway", label: Ui.Strings.t("network.gateway") },
     // One column is enough now that the servers are stacked rather than run
     // together, so the addressing row is four cells wide and nothing wraps.
-    { key: "dns", label: "Name servers" },
+    { key: "dns", label: Ui.Strings.t("network.nameServers") },
     // Where you are on the network, then everything about the link. The three
     // above are what someone copies out of this card; the rest is what they
     // read, so it sits under a rule and a size down.
     { rule: true },
-    { key: "channel", label: "Channel", small: true },
-    { key: "iface", label: "Interface", small: true },
-    { key: "connectedFor", label: "Connected for", small: true },
-    { key: "apFor", label: "On this access point", small: true },
-    { key: "rx", label: "Receiving", small: true },
-    { key: "tx", label: "Sending", small: true },
-    { key: "ping", label: "Ping to router", small: true },
-    { key: "session", label: "This session", small: true },
-    { key: "boot", label: "Since boot", small: true },
-    { key: "retries", label: "Frames retried", small: true },
-    { key: "beacons", label: "Beacons missed", small: true }
+    { key: "channel", label: Ui.Strings.t("network.channel"), small: true },
+    { key: "iface", label: Ui.Strings.t("network.interface"), small: true },
+    { key: "connectedFor", label: Ui.Strings.t("network.connectedFor"), small: true },
+    { key: "apFor", label: Ui.Strings.t("network.onThisAccessPoint"), small: true },
+    { key: "rx", label: Ui.Strings.t("network.receiving"), small: true },
+    { key: "tx", label: Ui.Strings.t("network.sending"), small: true },
+    { key: "ping", label: Ui.Strings.t("network.pingToRouter"), small: true },
+    { key: "session", label: Ui.Strings.t("network.thisSession"), small: true },
+    { key: "boot", label: Ui.Strings.t("network.sinceBoot"), small: true },
+    { key: "retries", label: Ui.Strings.t("network.framesRetried"), small: true },
+    { key: "beacons", label: Ui.Strings.t("network.beaconsMissed"), small: true }
   ]
 
   readonly property var factValues: {
@@ -181,7 +181,7 @@ Ui.SectionBody {
       // like.
       dns: dns.length > 0 ? dns.join("\n") : "—",
       channel: link.channel
-        ? "ch " + link.channel + (link.width ? " · " + link.width + " MHz" : "") : "—",
+        ? Ui.Strings.t("network.channelShort").arg(link.channel) + (link.width ? " · " + link.width + " MHz" : "") : "—",
       iface: reading(link.iface),
       // The connection, then the association. Keeping only the second and
       // calling it "Connected for" said 12 minutes while the network had been
@@ -311,7 +311,7 @@ Ui.SectionBody {
         id: leave
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        text: "Disconnect"
+        text: Ui.Strings.t("common.disconnect")
         bordered: true
         foreground: Ui.Palette.foreground
         accent: Ui.Palette.accent
@@ -366,9 +366,7 @@ Ui.SectionBody {
       // prints as "Frames retried", so the strip and the card agree.
       textFormat: Text.StyledText
       text: page.link.retryShare !== undefined && page.link.retryShare !== null
-        ? "<b>Channel busy</b> \u2014 pages may stall: " + page.link.retryShare.toFixed(0)
-          + " % of frames were retried even though the signal is strong. "
-          + "Something else is using channel " + page.link.channel + "."
+        ? Ui.Strings.t("network.channelBusy").arg(page.link.retryShare.toFixed(0)).arg(page.link.channel)
         : ""
       color: Ui.Palette.foreground
       font.family: Ui.Palette.fontFamily
@@ -380,13 +378,13 @@ Ui.SectionBody {
   Ui.SettingGroup {
     rowSpacing: Style.space(2)
     framed: page.app.otherNetworks.length > 0
-    title: page.connected ? "Other networks" : "Networks"
+    title: page.connected ? Ui.Strings.t("network.otherNetworks") : Ui.Strings.t("network.networks")
     // Nothing while there is a list — the list is the answer. "Looking" only
     // until the first scan lands, and once the network we are on proves one
     // has, an empty list means there is genuinely nothing else here.
     note: !page.radioOn || page.app.otherNetworks.length > 0 ? ""
-      : page.app.wifiNetworks.length > 0 ? "Nothing else in range."
-                                    : "Looking for networks…"
+      : page.app.wifiNetworks.length > 0 ? Ui.Strings.t("network.nothingElse")
+                                    : Ui.Strings.t("network.looking")
     visible: !searchEmpty && page.radioOn
     // No card around nothing: an empty rounded box reads as a list that failed
     // to load, where the note above it has already given the answer.
@@ -416,10 +414,10 @@ Ui.SectionBody {
 
   // ---- settings ------------------------------------------------------------
   Ui.SettingGroup {
-    title: "Wi-Fi"
+    title: Ui.Strings.t("network.wiFi")
 
     Ui.PickerRow {
-      label: "Band"
+      label: Ui.Strings.t("network.band")
       visible: !searchHidden && page.connected && page.app.bandOptions().length > 1
       value: page.app.wifiBand.selected !== undefined ? String(page.app.wifiBand.selected) : "auto"
       options: page.app.bandOptions()
@@ -427,7 +425,7 @@ Ui.SectionBody {
     }
 
     Ui.ChoiceRow {
-      label: "DNS provider"
+      label: Ui.Strings.t("network.dnsProvider")
       value: page.app.group("dns").current
       options: page.app.groupOptions("dns")
       onPicked: function(next) { page.app.run(["menu", "run", "setup.network.dns." + next]) }
@@ -450,7 +448,7 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Wired"
+    title: Ui.Strings.t("network.wired")
     visible: !searchEmpty && page.wiredPlugged.length > 0
 
     Repeater {
@@ -460,7 +458,7 @@ Ui.SectionBody {
         required property var modelData
         width: parent.width
         label: String(modelData.device)
-        description: modelData.speedMbit ? "Link at " + modelData.speedMbit + " Mbit/s" : "Cable connected"
+        description: modelData.speedMbit ? Ui.Strings.t("network.linkAt").arg(modelData.speedMbit) : Ui.Strings.t("network.cableConnected")
         value: modelData.connection ? String(modelData.connection) : String(modelData.state)
       }
     }
@@ -473,22 +471,22 @@ Ui.SectionBody {
   readonly property int hostTotal: app.hosts.total !== undefined ? app.hosts.total : 0
 
   Ui.SettingGroup {
-    title: "Hosts file"
+    title: Ui.Strings.t("network.hostsFile")
     note: page.hostTotal > page.hostEntries.length
-      ? "Showing the first " + page.hostEntries.length + " of " + page.hostTotal + "." : ""
+      ? Ui.Strings.t("network.showingFirst").arg(page.hostEntries.length).arg(page.hostTotal) : ""
 
     Ui.ActionRow {
-      label: "Local names"
-      description: "Resolved locally, before DNS. An entry here overrides what any DNS server returns."
-      buttonText: "Edit hosts file…"
+      label: Ui.Strings.t("network.localNames")
+      description: Ui.Strings.t("network.resolvedLocallyBeforeDnsAn")
+      buttonText: Ui.Strings.t("network.editHostsFile")
       onTriggered: { page.app.run(["hosts", "edit"]); page.app.hide() }
     }
 
     Ui.DataTable {
       visible: page.hostEntries.length > 0
       columns: [
-        { title: "Name", weight: 3 },
-        { title: "Address", weight: 1 }
+        { title: Ui.Strings.t("common.name"), weight: 3 },
+        { title: Ui.Strings.t("network.address"), weight: 1 }
       ]
       rows: {
         var out = []

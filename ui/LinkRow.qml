@@ -20,8 +20,8 @@ Local.NavRow {
   // legend offering "Space — Mark read" would open the article instead. The
   // step keys are the ones a row can tell apart.
   navKeys: linkRow.unread
-    ? [{ key: "↵", label: "Open" }, { key: "→", label: "Mark read" }]
-    : [{ key: "↵", label: "Open" }]
+    ? [{ key: "↵", label: Local.Strings.t("common.open") }, { key: "→", label: Local.Strings.t("ui.linkRow.markRead") }]
+    : [{ key: "↵", label: Local.Strings.t("common.open") }]
   onNavActivate: linkRow.triggered()
   onNavStep: function(delta) { if (delta > 0 && linkRow.unread) linkRow.starred() }
 

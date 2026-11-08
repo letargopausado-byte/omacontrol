@@ -37,8 +37,8 @@ Local.SettingRow {
   property bool editing: false
 
   navKeys: editing
-    ? [{ key: "\u21b5", label: clearOnCommit ? "Add" : "Save" }, { key: "Esc", label: "Cancel" }]
-    : [{ key: "\u21b5", label: "Edit" }]
+    ? [{ key: "\u21b5", label: clearOnCommit ? Local.Strings.t("common.add") : Local.Strings.t("ui.textRow.save") }, { key: "Esc", label: Local.Strings.t("common.cancel") }]
+    : [{ key: "\u21b5", label: Local.Strings.t("ui.textRow.edit") }]
 
   // One door for the button and the key, so the two cannot drift apart.
   function commit(next) {

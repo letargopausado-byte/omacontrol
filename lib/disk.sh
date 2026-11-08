@@ -94,6 +94,7 @@ disk_mounts() {
 # what it had got to. A partial `du` is not a small number, it is a wrong one,
 # and a slice of a chart cannot say "roughly".
 disk_breakdown() {
+  i18n_load
   local used pkg home snapshots
   used=$(capture df -B1 --output=used / | tail -n1 | tr -dc '0-9')
   [[ -n ${used:-} ]] || { echo 'null'; return; }
@@ -116,15 +117,17 @@ disk_breakdown() {
     --argjson used "${used:-0}" \
     --argjson pkg "${pkg:-null}" \
     --argjson home "${home:-null}" \
-    --argjson snapshots "${snapshots:-null}" '''
+    --argjson snapshots "${snapshots:-null}" \
+    --arg system "$(t disk.sliceSystem)" --arg packages "$(t disk.slicePackages)" \
+    --arg homeLabel "$(t disk.sliceHome)" --arg snapshotsLabel "$(t disk.sliceSnapshots)" '''
     # Only what was actually measured is subtracted, so a walk that timed out
     # makes the System slice larger rather than making it a lie.
     [$pkg, $home, $snapshots] as $named
     | ($named | map(select(. != null)) | add // 0) as $accounted
-    | [ { label: "System", bytes: (($used - $accounted) | if . > 0 then . else 0 end) },
-        { label: "Packages", bytes: $pkg },
-        { label: "Home", bytes: $home },
-        { label: "Snapshots", bytes: $snapshots } ]
+    | [ { id: "system", label: $system, bytes: (($used - $accounted) | if . > 0 then . else 0 end) },
+        { id: "packages", label: $packages, bytes: $pkg },
+        { id: "home", label: $homeLabel, bytes: $home },
+        { id: "snapshots", label: $snapshotsLabel, bytes: $snapshots } ]
       | map(select(.bytes != null))'''
 }
 

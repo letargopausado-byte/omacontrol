@@ -133,7 +133,7 @@ Item {
             textFormat: Text.PlainText
             anchors.centerIn: parent
             visible: tile.modelData.source === ""
-            text: "No preview"
+            text: Local.Strings.t("ui.pictureGrid.noPreview")
             color: Local.Palette.muted
             font.family: Local.Palette.fontFamily
             font.pixelSize: Style.font.caption

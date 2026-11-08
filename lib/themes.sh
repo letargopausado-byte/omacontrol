@@ -113,12 +113,13 @@ themes_backgrounds() {
 # `omarchy-plymouth-switcher` builds exactly this list to hand to its own
 # picker; it is read rather than run, since running it opens that picker.
 unlock_list() {
+  i18n_load
   local current rows="" name dir preview
   current=$(capture omarchy-plymouth-current)
   [[ -n $current ]] || current=default
 
   preview="${OMARCHY_PATH:-/usr/share/omarchy}/default/plymouth/preview-unlock.png"
-  [[ -f $preview ]] && rows+="default"$'\t'"Default"$'\t'"$preview"$'\n'
+  [[ -f $preview ]] && rows+="default"$'\t'"$(t themes.default)"$'\t'"$preview"$'\n'
 
   while IFS= read -r name; do
     [[ -n $name ]] || continue

@@ -37,7 +37,7 @@ SettingRow {
     if (next !== at) choiceRow.picked(String(list[next].value))
   }
 
-  navKeys: [{ key: "\u2190\u2192", label: "Choose" }]
+  navKeys: [{ key: "\u2190\u2192", label: Local.Strings.t("ui.choiceRow.choose") }]
 
   onNavStep: function(delta) { choiceRow.navPick(delta) }
   onNavActivate: choiceRow.navPick(1)

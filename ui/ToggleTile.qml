@@ -34,7 +34,7 @@ Local.NavRow {
   showBand: false
 
   onNavActivate: tile.requested(!tile.checked)
-  navKeys: [{ key: "Space", label: "Toggle" }]
+  navKeys: [{ key: "Space", label: Local.Strings.t("ui.toggleTile.toggle") }]
 
   implicitHeight: Math.max(badge.height, control.height) + Style.space(18)
 

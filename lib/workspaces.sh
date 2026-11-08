@@ -246,15 +246,16 @@ workspace_setups_config() {
 }
 
 workspace_setups_state() {
+  i18n_load
   local ours theirs
   ours=$(workspace_setups_ours)
   theirs=$(workspace_setups_config)
-  jq -cn --argjson ours "$ours" --argjson theirs "$theirs" '
+  jq -cn --argjson ours "$ours" --argjson theirs "$theirs" --arg workspaceN "$(t common.workspaceN)" '
     (($ours | keys) + ($theirs | keys) | unique | sort_by(tonumber)) as $ids
     | [ $ids[] as $i
         | ($ours[$i] // {}) as $o | ($theirs[$i] // {}) as $t
         | { id: $i,
-            label: ("Workspace " + $i),
+            label: ($workspaceN | sub("%1"; $i; "g")),
             monitor: ($o.monitor // $t.monitor // ""),
             default: ($o.default // $t.default // false),
             persistent: ($o.persistent // $t.persistent // false),

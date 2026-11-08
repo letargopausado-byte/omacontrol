@@ -7,11 +7,11 @@ Ui.SectionBody {
   id: page
   property var app: null
   Ui.SettingGroup {
-    title: "Gaps and borders"
+    title: Ui.Strings.t("windows.gapsAndBorders")
 
     Ui.NumberRow {
-      label: "Inner gaps"
-      suffix: "px"
+      label: Ui.Strings.t("windows.innerGaps")
+      suffix: Ui.Strings.t("common.px")
       value: page.app.hyprValue("gaps-in", 0)
       from: 0
       to: 40
@@ -21,8 +21,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Outer gaps"
-      suffix: "px"
+      label: Ui.Strings.t("windows.outerGaps")
+      suffix: Ui.Strings.t("common.px")
       value: page.app.hyprValue("gaps-out", 0)
       from: 0
       to: 60
@@ -32,8 +32,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Border width"
-      suffix: "px"
+      label: Ui.Strings.t("windows.borderWidth")
+      suffix: Ui.Strings.t("common.px")
       value: page.app.hyprValue("border-size", 0)
       from: 0
       to: 10
@@ -43,9 +43,9 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Floating gaps"
-      description: "Gap around floating windows. 0 follows the inner gap."
-      suffix: "px"
+      label: Ui.Strings.t("windows.floatingGaps")
+      description: Ui.Strings.t("windows.gapAroundFloatingWindows0")
+      suffix: Ui.Strings.t("common.px")
       value: page.app.hyprValue("float-gaps", 0)
       from: 0
       to: 40
@@ -55,9 +55,9 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Workspace gaps"
-      description: "Extra space between workspaces while they slide past."
-      suffix: "px"
+      label: Ui.Strings.t("windows.workspaceGaps")
+      description: Ui.Strings.t("windows.extraSpaceBetweenWorkspacesWhile")
+      suffix: Ui.Strings.t("common.px")
       value: page.app.hyprValue("gaps-workspaces", 0)
       from: 0
       to: 100
@@ -67,8 +67,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Border inside window"
-      description: "Counts the border as part of the window rather than drawing it outside."
+      label: Ui.Strings.t("windows.borderInsideWindow")
+      description: Ui.Strings.t("windows.countsTheBorderAsPart")
       checked: page.app.hyprValue("border-part-of-window", true) === true
       onRequested: function(next) { page.app.setHypr("border-part-of-window", next ? "true" : "false") }
       changed: page.app.isChanged("border-part-of-window")
@@ -76,8 +76,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Corner rounding"
-      suffix: "px"
+      label: Ui.Strings.t("windows.cornerRounding")
+      suffix: Ui.Strings.t("common.px")
       value: page.app.hyprValue("rounding", 0)
       from: 0
       to: 30
@@ -87,8 +87,8 @@ Ui.SectionBody {
     }
 
     Ui.FactorRow {
-      label: "Roundness curve"
-      description: "2.0 is a circle; higher gets you a squircle."
+      label: Ui.Strings.t("windows.roundnessCurve")
+      description: Ui.Strings.t("windows.20IsACircle")
       minimum: 1
       maximum: 10
       value: page.app.hyprValue("rounding-power", 2)
@@ -99,12 +99,12 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Snapping"
+    title: Ui.Strings.t("windows.snapping")
 
     // "Enabled": the heading has already said which setting this is.
     Ui.SwitchRow {
-      label: "Enabled"
-      description: "Snap floating windows to each other and to screen edges."
+      label: Ui.Strings.t("common.enabled")
+      description: Ui.Strings.t("windows.snapFloatingWindowsToEach")
       checked: page.app.hyprValue("snap", false) === true
       onRequested: function(next) { page.app.setHypr("snap", next ? "true" : "false") }
       changed: page.app.isChanged("snap")
@@ -112,9 +112,9 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Snap distance"
-      description: "How close a floating window gets before it snaps to another."
-      suffix: "px"
+      label: Ui.Strings.t("windows.snapDistance")
+      description: Ui.Strings.t("windows.howCloseAFloatingWindow")
+      suffix: Ui.Strings.t("common.px")
       enabled: page.app.hyprValue("snap", false) === true
       value: page.app.hyprValue("snap-window-gap", 10)
       from: 0
@@ -125,9 +125,9 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Snap to edges"
-      description: "How close a floating window gets before it snaps to a screen edge."
-      suffix: "px"
+      label: Ui.Strings.t("windows.snapToEdges")
+      description: Ui.Strings.t("windows.howCloseAFloatingWindow2")
+      suffix: Ui.Strings.t("common.px")
       enabled: page.app.hyprValue("snap", false) === true
       value: page.app.hyprValue("snap-monitor-gap", 10)
       from: 0
@@ -139,11 +139,11 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Focus and depth"
+    title: Ui.Strings.t("windows.focusAndDepth")
 
     Ui.SwitchRow {
-      label: "Full opacity"
-      description: "Omarchy fades every window to 98.5%, which multiplies with the settings below. This clears it, so 100% is 100%."
+      label: Ui.Strings.t("windows.fullOpacity")
+      description: Ui.Strings.t("windows.omarchyFadesEveryWindowTo")
       checked: page.app.hyprValue("opaque-windows", false) === true
       onRequested: function(next) { page.app.setHypr("opaque-windows", next ? "true" : "false") }
       changed: page.app.isChanged("opaque-windows")
@@ -151,7 +151,7 @@ Ui.SectionBody {
     }
 
     Ui.PercentRow {
-      label: "Active window opacity"
+      label: Ui.Strings.t("windows.activeWindowOpacity")
       value: page.app.hyprValue("active-opacity", 1)
       onCommitted: function(next) { page.app.setHypr("active-opacity", next) }
       changed: page.app.isChanged("active-opacity")
@@ -159,7 +159,7 @@ Ui.SectionBody {
     }
 
     Ui.PercentRow {
-      label: "Inactive window opacity"
+      label: Ui.Strings.t("windows.inactiveWindowOpacity")
       value: page.app.hyprValue("inactive-opacity", 1)
       onCommitted: function(next) { page.app.setHypr("inactive-opacity", next) }
       changed: page.app.isChanged("inactive-opacity")
@@ -167,8 +167,8 @@ Ui.SectionBody {
     }
 
     Ui.PercentRow {
-      label: "Fullscreen opacity"
-      description: "Opacity while a window is fullscreen."
+      label: Ui.Strings.t("windows.fullscreenOpacity")
+      description: Ui.Strings.t("windows.opacityWhileAWindowIs")
       value: page.app.hyprValue("fullscreen-opacity", 1)
       onCommitted: function(next) { page.app.setHypr("fullscreen-opacity", next) }
       changed: page.app.isChanged("fullscreen-opacity")
@@ -176,7 +176,7 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Dim inactive windows"
+      label: Ui.Strings.t("windows.dimInactiveWindows")
       checked: page.app.hyprValue("dim-inactive", false) === true
       onRequested: function(next) { page.app.setHypr("dim-inactive", next ? "true" : "false") }
       changed: page.app.isChanged("dim-inactive")
@@ -184,7 +184,7 @@ Ui.SectionBody {
     }
 
     Ui.PercentRow {
-      label: "Dim strength"
+      label: Ui.Strings.t("windows.dimStrength")
       enabled: page.app.hyprValue("dim-inactive", false) === true
       value: page.app.hyprValue("dim-strength", 0.5)
       onCommitted: function(next) { page.app.setHypr("dim-strength", next) }
@@ -193,8 +193,8 @@ Ui.SectionBody {
     }
 
     Ui.PercentRow {
-      label: "Special workspace dim"
-      description: "Dimming applied behind a special workspace."
+      label: Ui.Strings.t("windows.specialWorkspaceDim")
+      description: Ui.Strings.t("windows.dimmingAppliedBehindASpecial")
       value: page.app.hyprValue("dim-special", 0.2)
       onCommitted: function(next) { page.app.setHypr("dim-special", next) }
       changed: page.app.isChanged("dim-special")
@@ -202,8 +202,8 @@ Ui.SectionBody {
     }
 
     Ui.PercentRow {
-      label: "Dim around"
-      description: "Dimming behind windows using the dimaround window rule."
+      label: Ui.Strings.t("windows.dimAround")
+      description: Ui.Strings.t("windows.dimmingBehindWindowsUsingThe")
       value: page.app.hyprValue("dim-around", 0.4)
       onCommitted: function(next) { page.app.setHypr("dim-around", next) }
       changed: page.app.isChanged("dim-around")
@@ -211,8 +211,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Dim behind modals"
-      description: "Darkens a window while one of its dialogs is open."
+      label: Ui.Strings.t("windows.dimBehindModals")
+      description: Ui.Strings.t("windows.darkensAWindowWhileOne")
       checked: page.app.hyprValue("dim-modal", true) === true
       onRequested: function(next) { page.app.setHypr("dim-modal", next ? "true" : "false") }
       changed: page.app.isChanged("dim-modal")
@@ -221,10 +221,10 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Animations"
+    title: Ui.Strings.t("windows.animations")
 
     Ui.SwitchRow {
-      label: "Enabled"
+      label: Ui.Strings.t("common.enabled")
       checked: page.app.hyprValue("animations", true) === true
       onRequested: function(next) { page.app.setHypr("animations", next ? "true" : "false") }
       changed: page.app.isChanged("animations")
@@ -232,8 +232,8 @@ Ui.SectionBody {
     }
 
     Ui.FactorRow {
-      label: "Speed"
-      description: "A multiplier over the animation set Omarchy ships. Higher is faster."
+      label: Ui.Strings.t("windows.speed")
+      description: Ui.Strings.t("windows.aMultiplierOverTheAnimation")
       enabled: page.app.hyprValue("animations", true) === true
       minimum: 0.25
       maximum: 3
@@ -244,8 +244,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Wrap workspaces"
-      description: "Slides the short way when moving between the first and last workspace."
+      label: Ui.Strings.t("windows.wrapWorkspaces")
+      description: Ui.Strings.t("windows.slidesTheShortWayWhen")
       enabled: page.app.hyprValue("animations", true) === true
       checked: page.app.hyprValue("animations-wraparound", false) === true
       onRequested: function(next) { page.app.setHypr("animations-wraparound", next ? "true" : "false") }
@@ -255,12 +255,12 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Beyond these settings"
+    title: Ui.Strings.t("common.beyondTheseSettings")
 
     Ui.ActionRow {
-      label: "Window rules and animations"
-      description: "Open looknfeel.lua for anything this page does not cover."
-      buttonText: "Edit…"
+      label: Ui.Strings.t("windows.windowRulesAndAnimations")
+      description: Ui.Strings.t("windows.openLooknfeelLuaForAnything")
+      buttonText: Ui.Strings.t("common.edit")
       onTriggered: page.app.run(["menu", "run", "style.hyprland"])
     }
   }

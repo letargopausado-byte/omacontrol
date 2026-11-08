@@ -22,7 +22,7 @@ Item {
     id: nav
     anchors.fill: parent
     searchText: specimen.family
-    navKeys: [{ key: "Space", label: "Use this font" }]
+    navKeys: [{ key: "Space", label: Local.Strings.t("ui.specimenRow.useThisFont") }]
     onNavActivate: specimen.chose()
   }
 

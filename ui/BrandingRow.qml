@@ -15,7 +15,7 @@ Local.SettingRow {
     spacing: Style.space(8)
 
     Button {
-      text: "Text…"
+      text: Local.Strings.t("ui.brandingRow.text")
       bordered: true
       foreground: Local.Palette.foreground
       accent: Local.Palette.accent
@@ -24,7 +24,7 @@ Local.SettingRow {
     }
 
     Button {
-      text: "Image…"
+      text: Local.Strings.t("ui.brandingRow.image")
       bordered: true
       foreground: Local.Palette.foreground
       accent: Local.Palette.accent
@@ -33,7 +33,7 @@ Local.SettingRow {
     }
 
     Button {
-      text: "Reset"
+      text: Local.Strings.t("ui.brandingRow.reset")
       bordered: true
       foreground: Local.Palette.foreground
       accent: Local.Palette.accent

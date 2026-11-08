@@ -37,16 +37,16 @@ Ui.SectionBody {
 
   Ui.SettingGroup {
     rowSpacing: Style.space(2)
-    title: "Output"
+    title: Ui.Strings.t("audio.output")
 
     Ui.PercentRow {
-      label: "Volume"
+      label: Ui.Strings.t("audio.volume")
       value: page.currentOutput ? Number(page.currentOutput.volume) / 100 : 0
       onCommitted: function(next) { page.app.run(["audio", "volume", "output", String(Math.round(next * 100))]) }
     }
 
     Ui.SwitchRow {
-      label: "Muted"
+      label: Ui.Strings.t("audio.muted")
       checked: page.currentOutput ? page.currentOutput.muted === true : false
       onRequested: function(next) { page.app.run(["audio", "mute", "output", next ? "on" : "off"]) }
     }
@@ -67,16 +67,16 @@ Ui.SectionBody {
 
   Ui.SettingGroup {
     rowSpacing: Style.space(2)
-    title: "Input"
+    title: Ui.Strings.t("audio.input")
 
     Ui.PercentRow {
-      label: "Volume"
+      label: Ui.Strings.t("audio.volume")
       value: page.currentInput ? Number(page.currentInput.volume) / 100 : 0
       onCommitted: function(next) { page.app.run(["audio", "volume", "input", String(Math.round(next * 100))]) }
     }
 
     Ui.SwitchRow {
-      label: "Muted"
+      label: Ui.Strings.t("audio.muted")
       checked: page.currentInput ? page.currentInput.muted === true : false
       onRequested: function(next) { page.app.run(["audio", "mute", "input", next ? "on" : "off"]) }
     }

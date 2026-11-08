@@ -29,8 +29,8 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Add a binding"
-    note: "Keys as Hyprland spells them: SUPER, SHIFT, CTRL, ALT, and a key."
+    title: Ui.Strings.t("bindings.addABinding")
+    note: Ui.Strings.t("bindings.keysAsHyprlandSpellsThem")
 
     Row {
       width: parent.width
@@ -39,7 +39,7 @@ Ui.SectionBody {
       TextField {
         id: keysField
         width: (parent.width - addBindingButton.width - Style.space(24)) * 0.3
-        placeholderText: "SUPER + SHIFT + R"
+        placeholderText: Ui.Strings.t("bindings.superShiftR")
         foreground: page.app.foreground
         accent: page.app.accent
       }
@@ -47,7 +47,7 @@ Ui.SectionBody {
       TextField {
         id: bindingDescriptionField
         width: (parent.width - addBindingButton.width - Style.space(24)) * 0.25
-        placeholderText: "what it does"
+        placeholderText: Ui.Strings.t("bindings.whatItDoes")
         foreground: page.app.foreground
         accent: page.app.accent
       }
@@ -55,14 +55,14 @@ Ui.SectionBody {
       TextField {
         id: commandField
         width: (parent.width - addBindingButton.width - Style.space(24)) * 0.45
-        placeholderText: "command to run"
+        placeholderText: Ui.Strings.t("bindings.commandToRun")
         foreground: page.app.foreground
         accent: page.app.accent
       }
 
       Button {
         id: addBindingButton
-        text: "Add"
+        text: Ui.Strings.t("common.add")
         bordered: true
         foreground: page.app.foreground
         accent: page.app.accent
@@ -89,9 +89,9 @@ Ui.SectionBody {
       visible: clash !== null
       wrapMode: Text.WordWrap
       text: clash
-        ? page.canonicalKeys(keysField.text) + " already runs " +
-          (String(clash.description) !== "" ? String(clash.description) : "something else") +
-          ". Adding this replaces it."
+        ? (String(clash.description) !== ""
+           ? Ui.Strings.t("bindings.clash").arg(page.canonicalKeys(keysField.text)).arg(String(clash.description))
+           : Ui.Strings.t("bindings.clashUnnamed").arg(page.canonicalKeys(keysField.text)))
         : ""
       color: Ui.Palette.urgent
       font.family: Ui.Palette.fontFamily
@@ -100,7 +100,7 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Every binding"
+    title: Ui.Strings.t("bindings.everyBinding")
 
     // This page had a search of its own before the window did. While the
     // window is searching, that one steps aside rather than filtering the
@@ -109,7 +109,7 @@ Ui.SectionBody {
     TextField {
       width: parent.width
       visible: !page.app.searching
-      placeholderText: "Search keys or actions…"
+      placeholderText: Ui.Strings.t("bindings.searchKeysOrActions")
       text: page.app.bindingFilter
       foreground: page.app.foreground
       accent: page.app.accent

@@ -52,6 +52,7 @@ wifi_dbm() {
 # Access points, strongest first, one row per network rather than one per
 # radio: the same network seen from three access points is still one choice.
 wifi_networks() {
+  i18n_load
   local device=$1 saved dbm link associated live
   saved=$(wifi_saved | jq -R -s -c 'split("\n") | map(select(length > 0))')
   dbm=$(wifi_dbm "$device")
@@ -90,7 +91,7 @@ wifi_networks() {
       }
     ' \
     | jq -R -s -c --argjson saved "${saved:-[]}" --argjson dbm "${dbm:-{\}}" \
-        --arg associated "${associated:-}" --arg live "${live:-}" 'split("\n")
+        --arg associated "${associated:-}" --arg live "${live:-}" --arg openLabel "$(t wifi.open)" 'split("\n")
       | map(select(length > 0) | split("\t") | . as $row
         | { ssid: $row[1],
             active: ($row[0] == "true"),
@@ -100,7 +101,7 @@ wifi_networks() {
             # What the row prints: the words nmcli uses, or the fact that
             # there are none. An open network is worth naming rather than
             # leaving as the absence of a padlock.
-            securityLabel: (if ($row[3] == "" or $row[3] == "--") then "Open"
+            securityLabel: (if ($row[3] == "" or $row[3] == "--") then $openLabel
                             else ($row[3] | split(" ") | join("/")) end),
             band: ($row[5] // ""),
             associated: ($associated != "" and $row[4] == $associated),

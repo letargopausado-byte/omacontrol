@@ -49,10 +49,9 @@ Ui.SectionBody {
     if (app.selfBehind > 0)
       items.push({
         id: "self",
-        title: "OmaControl is " + app.selfBehind
-          + (app.selfBehind === 1 ? " commit behind" : " commits behind"),
-        note: "Checked once this opening.",
-        actionLabel: "Update",
+        title: Ui.Strings.tn("overview.selfBehind", app.selfBehind).arg(app.selfBehind),
+        note: Ui.Strings.t("overview.checkedOnceThisOpening"),
+        actionLabel: Ui.Strings.t("overview.update"),
         update: true
       })
 
@@ -60,8 +59,7 @@ Ui.SectionBody {
   }
 
   readonly property string headerNote: attention.length === 0 ? ""
-    : (attention.length === 1 ? "1 thing needs attention"
-                              : attention.length + " things need attention")
+    : Ui.Strings.tn("overview.attentionCount", attention.length).arg(attention.length)
 
   // Switch state is held in the running system — hyprsunset's temperature, the
   // shell's own do-not-disturb — so it can be changed from the bar or a
@@ -135,7 +133,7 @@ Ui.SectionBody {
   // the toggles run straight into the updates.
   Ui.SettingGroup {
     framed: true
-    title: "Needs attention"
+    title: Ui.Strings.t("overview.needsAttention")
     visible: !searchEmpty && page.attention.length > 0
 
     Repeater {
@@ -148,7 +146,7 @@ Ui.SectionBody {
         description: modelData.note !== undefined ? modelData.note : ""
         glyph: modelData.urgent === true ? "\uf071" : "\uf05a"
         urgent: modelData.urgent === true
-        actionText: modelData.actionLabel !== undefined ? modelData.actionLabel : "Open"
+        actionText: modelData.actionLabel !== undefined ? modelData.actionLabel : Ui.Strings.t("common.open")
         dismissable: modelData.id !== undefined
 
         onTriggered: {
@@ -175,10 +173,10 @@ Ui.SectionBody {
   // without knowing how old it is.
   Ui.SettingGroup {
     framed: true
-    title: "Updates"
+    title: Ui.Strings.t("common.updates")
     note: page.updates.checkedAt > 0
-      ? "Mirrors last checked " + page.app.formatWhen(page.updates.checkedAt)
-      : "Mirrors have not been checked yet."
+      ? Ui.Strings.t("overview.mirrorsChecked").arg(page.app.formatWhen(page.updates.checkedAt))
+      : Ui.Strings.t("overview.mirrorsNotChecked")
     visible: !searchEmpty && page.hasUpdates
 
     // Omarchy ships as a package, so its row is that package pulled out of
@@ -187,27 +185,27 @@ Ui.SectionBody {
       visible: !searchHidden && page.updates.omarchy !== undefined && page.updates.omarchy !== null
       glyph: ""
       label: page.updates.omarchy ? "Omarchy " + page.updates.omarchy.available : ""
-      description: "You are on " + page.updates.version
-        + (page.updates.channel !== "" ? " · " + page.updates.channel + " channel" : "")
-      actionText: "Update"
+      description: Ui.Strings.t("overview.youAreOn").arg(page.updates.version)
+        + (page.updates.channel !== "" ? " · " + Ui.Strings.t("about.channelTag").arg(page.updates.channel) : "")
+      actionText: Ui.Strings.t("overview.update")
       onTriggered: { page.app.run(["packages", "update"]); page.app.hide() }
     }
 
     Ui.NoticeRow {
       visible: !searchHidden && page.updates.packages > 0
       glyph: ""
-      label: page.updates.packages === 1 ? "1 package" : page.updates.packages + " packages"
-      description: "Waiting in the repositories and the AUR."
-      actionText: "Open Packages"
+      label: Ui.Strings.tn("overview.packages", page.updates.packages).arg(page.updates.packages)
+      description: Ui.Strings.t("overview.waitingInTheRepositoriesAnd")
+      actionText: Ui.Strings.t("overview.openPackages")
       onTriggered: page.app.pageId = "packages"
     }
 
     Ui.NoticeRow {
       visible: !searchHidden && page.updatePlugins.length > 0
       glyph: ""
-      label: page.updatePlugins.length === 1 ? "1 plugin" : page.updatePlugins.length + " plugins"
+      label: Ui.Strings.tn("overview.plugins", page.updatePlugins.length).arg(page.updatePlugins.length)
       description: page.updatePlugins.join(" · ")
-      actionText: "Open Plugins"
+      actionText: Ui.Strings.t("overview.openPlugins")
       onTriggered: page.app.pageId = "plugins"
     }
   }
@@ -216,13 +214,13 @@ Ui.SectionBody {
   // because it is the only thing on the page that is not about this machine.
   Ui.SettingGroup {
     framed: true
-    title: "News from omarchy.org"
+    title: Ui.Strings.t("overview.newsFromOmarchyOrg")
     // The count first, because it is the only part of this heading anyone
     // scans for; the age second, because a headline with no age on it is one
     // you cannot judge.
-    note: (page.unreadNews > 0 ? (page.unreadNews === 1 ? "1 new · " : page.unreadNews + " new · ") : "")
+    note: (page.unreadNews > 0 ? Ui.Strings.tn("overview.newCount", page.unreadNews).arg(page.unreadNews) + " · " : "")
       + (page.news.fetchedAt !== undefined && page.news.fetchedAt > 0
-         ? "fetched " + page.app.formatWhen(page.news.fetchedAt) : "")
+         ? Ui.Strings.t("overview.fetched").arg(page.app.formatWhen(page.news.fetchedAt)) : "")
     visible: !searchEmpty && page.newsItems.length > 0
 
     Repeater {
@@ -235,9 +233,10 @@ Ui.SectionBody {
         required property var modelData
 
         label: modelData.title
-        // What the site itself printed, rather than a date reformatted into
-        // something its author would not recognise.
-        value: modelData.shown !== undefined ? modelData.shown : ""
+        // Written out the way the site writes it — the English pattern is
+        // the site's own — rather than a format the reader has to decode.
+        value: modelData.date ? page.app.formatDate(new Date(modelData.date + "T12:00:00"), Ui.Strings.t("common.longDate"))
+          : (modelData.shown !== undefined ? modelData.shown : "")
         unread: modelData.read === false
         // Opening one reads it — the reader does not have to say so twice —
         // and `news open` records that itself, so both paths agree.
@@ -253,7 +252,7 @@ Ui.SectionBody {
 
     Ui.Chip {
       visible: page.unreadNews > 0
-      text: "Mark all as read"
+      text: Ui.Strings.t("overview.markAllAsRead")
       onClicked: page.app.run(["news", "read-all"])
     }
   }

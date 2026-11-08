@@ -7,11 +7,11 @@ Ui.SectionBody {
   id: page
   property var app: null
   Ui.SettingGroup {
-    title: "Keys"
+    title: Ui.Strings.t("tmux.keys")
 
     Ui.TextRow {
-      label: "Prefix"
-      description: "tmux spelling: C-Space, C-b, M-a."
+      label: Ui.Strings.t("tmux.prefix")
+      description: Ui.Strings.t("tmux.tmuxSpellingCSpaceC")
       placeholder: "C-b"
       value: String(page.app.tmuxValue("prefix", "C-b"))
       onCommitted: function(next) { page.app.setTmux("prefix", next) }
@@ -20,11 +20,11 @@ Ui.SectionBody {
     }
 
     Ui.PickerRow {
-      label: "Copy mode keys"
+      label: Ui.Strings.t("tmux.copyModeKeys")
       value: String(page.app.tmuxValue("mode-keys", "emacs"))
       options: [
-        { value: "vi", label: "Vi" },
-        { value: "emacs", label: "Emacs" }
+        { value: "vi", label: Ui.Strings.t("tmux.vi") },
+        { value: "emacs", label: Ui.Strings.t("tmux.emacs") }
       ]
       onPicked: function(next) { page.app.setTmux("mode-keys", next) }
       changed: page.app.isChanged("tmux:mode-keys")
@@ -32,22 +32,22 @@ Ui.SectionBody {
     }
 
     Ui.ActionRow {
-      label: "Every shortcut"
-      description: "The full list, as tmux has it."
-      buttonText: "Show…"
+      label: Ui.Strings.t("tmux.everyShortcut")
+      description: Ui.Strings.t("tmux.theFullListAsTmux")
+      buttonText: Ui.Strings.t("tmux.show")
       onTriggered: page.app.run(["menu", "run", "learn.tmux-keybindings"])
     }
   }
 
   Ui.SettingGroup {
-    title: "Status bar"
+    title: Ui.Strings.t("tmux.statusBar")
 
     Ui.PickerRow {
-      label: "Position"
+      label: Ui.Strings.t("tmux.position")
       value: String(page.app.tmuxValue("status-position", "bottom"))
       options: [
-        { value: "top", label: "Top" },
-        { value: "bottom", label: "Bottom" }
+        { value: "top", label: Ui.Strings.t("common.top") },
+        { value: "bottom", label: Ui.Strings.t("common.bottom") }
       ]
       onPicked: function(next) { page.app.setTmux("status-position", next) }
       changed: page.app.isChanged("tmux:status-position")
@@ -56,10 +56,10 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Windows and panes"
+    title: Ui.Strings.t("tmux.windowsAndPanes")
 
     Ui.NumberRow {
-      label: "First window number"
+      label: Ui.Strings.t("tmux.firstWindowNumber")
       value: Number(page.app.tmuxValue("base-index", 0))
       from: 0
       to: 1
@@ -69,7 +69,7 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "First pane number"
+      label: Ui.Strings.t("tmux.firstPaneNumber")
       value: Number(page.app.tmuxValue("pane-base-index", 0))
       from: 0
       to: 1
@@ -79,7 +79,7 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Renumber when one closes"
+      label: Ui.Strings.t("tmux.renumberWhenOneCloses")
       checked: page.app.tmuxValue("renumber-windows", false) === true
       onRequested: function(next) { page.app.setTmux("renumber-windows", next ? "true" : "false") }
       changed: page.app.isChanged("tmux:renumber-windows")
@@ -88,11 +88,11 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Behaviour"
+    title: Ui.Strings.t("tmux.behaviour")
 
     Ui.SwitchRow {
-      label: "Mouse"
-      description: "Click to focus a pane, drag to resize, scroll to page back."
+      label: Ui.Strings.t("tmux.mouse")
+      description: Ui.Strings.t("tmux.clickToFocusAPane")
       checked: page.app.tmuxValue("mouse", false) === true
       onRequested: function(next) { page.app.setTmux("mouse", next ? "true" : "false") }
       changed: page.app.isChanged("tmux:mouse")
@@ -100,8 +100,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Scrollback"
-      suffix: "lines"
+      label: Ui.Strings.t("tmux.scrollback")
+      suffix: Ui.Strings.t("common.lines")
       value: Number(page.app.tmuxValue("history-limit", 2000))
       from: 1000
       to: 100000
@@ -112,9 +112,9 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Escape delay"
-      suffix: "ms"
-      description: "Low values keep Esc snappy in Vim; zero can break some terminals."
+      label: Ui.Strings.t("tmux.escapeDelay")
+      suffix: Ui.Strings.t("tmux.ms")
+      description: Ui.Strings.t("tmux.lowValuesKeepEscSnappy")
       value: Number(page.app.tmuxValue("escape-time", 500))
       from: 0
       to: 500
@@ -125,13 +125,13 @@ Ui.SectionBody {
     }
 
     Ui.PickerRow {
-      label: "Clipboard"
-      description: "Whether tmux hands copied text to the outer terminal."
+      label: Ui.Strings.t("tmux.clipboard")
+      description: Ui.Strings.t("tmux.whetherTmuxHandsCopiedText")
       value: String(page.app.tmuxValue("set-clipboard", "external"))
       options: [
-        { value: "on", label: "On" },
-        { value: "external", label: "External only" },
-        { value: "off", label: "Off" }
+        { value: "on", label: Ui.Strings.t("common.on") },
+        { value: "external", label: Ui.Strings.t("tmux.externalOnly") },
+        { value: "off", label: Ui.Strings.t("tmux.off") }
       ]
       onPicked: function(next) { page.app.setTmux("set-clipboard", next) }
       changed: page.app.isChanged("tmux:set-clipboard")
@@ -140,12 +140,12 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Beyond these settings"
+    title: Ui.Strings.t("common.beyondTheseSettings")
 
     Ui.ActionRow {
-      label: "The rest of the config"
-      description: "Open tmux.conf for bindings, styling, and plugins."
-      buttonText: "Edit…"
+      label: Ui.Strings.t("common.theRestOfTheConfig")
+      description: Ui.Strings.t("tmux.openTmuxConfForBindings")
+      buttonText: Ui.Strings.t("common.edit")
       onTriggered: page.app.editConfig("$HOME/.config/tmux/tmux.conf")
     }
   }

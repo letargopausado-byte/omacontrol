@@ -10,8 +10,8 @@ Ui.SectionBody {
   Ui.SettingGroup {
 
     Ui.PercentRow {
-      label: "Sensitivity"
-      description: "How far the pointer travels for the same hand movement."
+      label: Ui.Strings.t("pointer.sensitivity")
+      description: Ui.Strings.t("pointer.howFarThePointerTravels")
       value: (Number(page.app.hyprValue("sensitivity", 0)) + 1) / 2
       onCommitted: function(next) { page.app.setHypr("sensitivity", (next * 2 - 1).toFixed(2)) }
       changed: page.app.isChanged("sensitivity")
@@ -19,12 +19,12 @@ Ui.SectionBody {
     }
 
     Ui.PickerRow {
-      label: "Acceleration"
+      label: Ui.Strings.t("pointer.acceleration")
       value: String(page.app.hyprValue("accel-profile", ""))
       options: [
-        { value: "", label: "Default (adaptive)" },
-        { value: "flat", label: "Flat — no acceleration" },
-        { value: "adaptive", label: "Adaptive" }
+        { value: "", label: Ui.Strings.t("pointer.defaultAdaptive") },
+        { value: "flat", label: Ui.Strings.t("pointer.flatNoAcceleration") },
+        { value: "adaptive", label: Ui.Strings.t("pointer.adaptive") }
       ]
       onPicked: function(next) { page.app.setHypr("accel-profile", next) }
       changed: page.app.isChanged("accel-profile")
@@ -32,13 +32,13 @@ Ui.SectionBody {
     }
 
     Ui.PickerRow {
-      label: "Focus follows mouse"
+      label: Ui.Strings.t("pointer.focusFollowsMouse")
       value: String(page.app.hyprValue("follow-mouse", 1))
       options: [
-        { value: "0", label: "Off — click to focus" },
-        { value: "1", label: "On" },
-        { value: "2", label: "On, but keyboard stays" },
-        { value: "3", label: "On, without raising" }
+        { value: "0", label: Ui.Strings.t("pointer.offClickToFocus") },
+        { value: "1", label: Ui.Strings.t("common.on") },
+        { value: "2", label: Ui.Strings.t("pointer.onButKeyboardStays") },
+        { value: "3", label: Ui.Strings.t("pointer.onWithoutRaising") }
       ]
       onPicked: function(next) { page.app.setHypr("follow-mouse", next) }
       changed: page.app.isChanged("follow-mouse")
@@ -47,10 +47,10 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Touchpad"
+    title: Ui.Strings.t("pointer.touchpad")
 
     Ui.SwitchRow {
-      label: "Natural scrolling"
+      label: Ui.Strings.t("pointer.naturalScrolling")
       checked: page.app.hyprValue("natural-scroll", false) === true
       onRequested: function(next) { page.app.setHypr("natural-scroll", next ? "true" : "false") }
       changed: page.app.isChanged("natural-scroll")
@@ -58,7 +58,7 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Tap to click"
+      label: Ui.Strings.t("pointer.tapToClick")
       checked: page.app.hyprValue("tap-to-click", true) === true
       onRequested: function(next) { page.app.setHypr("tap-to-click", next ? "true" : "false") }
       changed: page.app.isChanged("tap-to-click")
@@ -66,8 +66,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Two-finger right click"
-      description: "Off uses the lower-right corner instead."
+      label: Ui.Strings.t("pointer.twoFingerRightClick")
+      description: Ui.Strings.t("pointer.offUsesTheLowerRight")
       checked: page.app.hyprValue("clickfinger", false) === true
       onRequested: function(next) { page.app.setHypr("clickfinger", next ? "true" : "false") }
       changed: page.app.isChanged("clickfinger")
@@ -75,7 +75,7 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Disable while typing"
+      label: Ui.Strings.t("pointer.disableWhileTyping")
       checked: page.app.hyprValue("disable-while-typing", true) === true
       onRequested: function(next) { page.app.setHypr("disable-while-typing", next ? "true" : "false") }
       changed: page.app.isChanged("disable-while-typing")
@@ -83,7 +83,7 @@ Ui.SectionBody {
     }
 
     Ui.FactorRow {
-      label: "Scroll speed"
+      label: Ui.Strings.t("pointer.scrollSpeed")
       value: Number(page.app.hyprValue("scroll-factor", 1))
       onCommitted: function(next) { page.app.setHypr("scroll-factor", next) }
       changed: page.app.isChanged("scroll-factor")
@@ -153,13 +153,13 @@ Ui.SectionBody {
       width: parent.width
       // Named as a device so the heading cannot be mistaken for another
       // group of settings.
-      title: "Device: " + name + (modelData.connected === false ? "  (not connected)" : "")
+      title: Ui.Strings.t("common.device").arg(modelData.connected === false ? Ui.Strings.t("common.notConnectedName").arg(name) : name)
       note: Object.keys(configured).length > 0 && !ours
-        ? "Set in your own Hyprland config."
+        ? Ui.Strings.t("common.setInYourHyprland")
         : ""
 
       Ui.PercentRow {
-        label: "Sensitivity"
+        label: Ui.Strings.t("pointer.sensitivity")
         value: (Number(deviceGroup.inForce("sensitivity", page.app.hyprValue("sensitivity", 0))) + 1) / 2
         onCommitted: function(next) { page.app.setDevice(deviceGroup.name, "sensitivity", (next * 2 - 1).toFixed(2), "pointer") }
         changed: page.app.isChanged("device:" + deviceGroup.name + ":sensitivity")
@@ -167,12 +167,12 @@ Ui.SectionBody {
       }
 
       Ui.PickerRow {
-        label: "Acceleration"
+        label: Ui.Strings.t("pointer.acceleration")
         value: String(deviceGroup.inForce("accel_profile", page.app.hyprValue("accel-profile", "")))
         options: [
-          { value: "", label: "Default (adaptive)" },
-          { value: "flat", label: "Flat — no acceleration" },
-          { value: "adaptive", label: "Adaptive" }
+          { value: "", label: Ui.Strings.t("pointer.defaultAdaptive") },
+          { value: "flat", label: Ui.Strings.t("pointer.flatNoAcceleration") },
+          { value: "adaptive", label: Ui.Strings.t("pointer.adaptive") }
         ]
         onPicked: function(next) { page.app.setDevice(deviceGroup.name, "accel_profile", next, "pointer") }
         changed: page.app.isChanged("device:" + deviceGroup.name + ":accel_profile")
@@ -180,7 +180,7 @@ Ui.SectionBody {
       }
 
       Ui.SwitchRow {
-        label: "Natural scrolling"
+        label: Ui.Strings.t("pointer.naturalScrolling")
         checked: deviceGroup.inForce("natural_scroll", page.app.hyprValue(deviceGroup.touchpad ? "natural-scroll" : "mouse-natural-scroll", false)) === true
         onRequested: function(next) { page.app.setDevice(deviceGroup.name, "natural_scroll", next ? "true" : "false", "pointer") }
         changed: page.app.isChanged("device:" + deviceGroup.name + ":natural_scroll")
@@ -188,7 +188,7 @@ Ui.SectionBody {
       }
 
       Ui.SwitchRow {
-        label: "Left handed"
+        label: Ui.Strings.t("pointer.leftHanded")
         checked: deviceGroup.inForce("left_handed", false) === true
         onRequested: function(next) { page.app.setDevice(deviceGroup.name, "left_handed", next ? "true" : "false", "pointer") }
         changed: page.app.isChanged("device:" + deviceGroup.name + ":left_handed")
@@ -196,7 +196,7 @@ Ui.SectionBody {
       }
 
       Ui.FactorRow {
-        label: "Scroll speed"
+        label: Ui.Strings.t("pointer.scrollSpeed")
         minimum: 0.1
         maximum: 3
         value: Number(deviceGroup.inForce("scroll_factor", page.app.hyprValue(deviceGroup.touchpad ? "scroll-factor" : "mouse-scroll-factor", 1)))
@@ -210,7 +210,7 @@ Ui.SectionBody {
       Ui.ActionRow {
         readonly property bool theirs: Object.keys(deviceGroup.configured).length > 0
 
-        buttonText: "Remove Device"
+        buttonText: Ui.Strings.t("pointer.removeDevice")
         onTriggered: {
           if (theirs) page.app.removeDevice(deviceGroup.name)
           else if (deviceGroup.ours) page.app.clearDevice(deviceGroup.name)
@@ -224,13 +224,13 @@ Ui.SectionBody {
     visible: !searchEmpty && page.untouched.length > 0
 
     Ui.PickerRow {
-      label: "Settings for one device"
-      description: "Give a single mouse or touchpad its own settings, apart from the ones above."
+      label: Ui.Strings.t("pointer.settingsForOneDevice")
+      description: Ui.Strings.t("pointer.giveASingleMouseOr")
       value: ""
-      options: [{ value: "", label: "Pick a device…" }].concat(page.untouched.map(function(device) {
+      options: [{ value: "", label: Ui.Strings.t("pointer.pickADevice") }].concat(page.untouched.map(function(device) {
         return {
           value: String(device.name),
-          label: String(device.name) + (device.connected === false ? " (not connected)" : "")
+          label: device.connected === false ? Ui.Strings.t("common.notConnectedName").arg(String(device.name)) : String(device.name)
         }
       }))
       onPicked: function(next) { if (next !== "") page.openDevice(next) }

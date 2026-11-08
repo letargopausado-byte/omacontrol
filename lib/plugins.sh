@@ -331,9 +331,9 @@ plugin_add_run() {
     # is the window's own.
     id=$(sed -n 's/^Added \([^[:space:]]*\) into .*/\1/p' <<<"$out" | head -n 1)
     if [[ $enable == enable ]]; then
-      msg="Added ${id:-it} and switched it on."
+      msg=$(if [[ -n $id ]]; then t plugins.addedOn "$id"; else t plugins.addedOnUnnamed; fi)
     else
-      msg="Added ${id:-it}. It stays off until you switch it on."
+      msg=$(if [[ -n $id ]]; then t plugins.addedOff "$id"; else t plugins.addedOffUnnamed; fi)
     fi
   else
     msg=$(printf '%s' "$out" | grep -v '^[[:space:]]*$' | tail -n 1 | head -c 400)
@@ -360,6 +360,7 @@ plugin_add_clear() {
 }
 
 plugin_update_run() {
+  i18n_load
   local id=$1 reopen=${2:-0} out rc msg
   # Bounded by the tail rather than the head, and deliberately: `head -c`
   # closes the pipe once it has enough, and the SIGPIPE that follows would
@@ -373,7 +374,7 @@ plugin_update_run() {
   # "x is up to date.", or why it refused.
   msg=$(printf '%s' "$out" | grep -v '^[[:space:]]*$' | tail -n 1 | head -c 400)
   if [[ -z $msg ]]; then
-    (( rc == 0 )) && msg="Updated." || msg="Update failed."
+    (( rc == 0 )) && msg=$(t plugins.updatedSentence) || msg=$(t plugins.updateFailed)
   fi
 
   # A successful update makes the recorded count a lie; the cheapest honest

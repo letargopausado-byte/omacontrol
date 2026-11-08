@@ -7,32 +7,32 @@ Ui.SectionBody {
   id: page
   property var app: null
   Ui.SettingGroup {
-    title: "Applications"
-    note: "An app you have not installed yet is set up the first time you pick it."
+    title: Ui.Strings.t("defaults.applications")
+    note: Ui.Strings.t("defaults.anAppYouHaveNot")
 
     Ui.PickerRow {
-      label: "Browser"
+      label: Ui.Strings.t("defaults.browser")
       value: page.app.group("browser").current
       options: page.app.groupOptions("browser")
       onPicked: function(next) { page.app.run(["menu", "run", "setup.default.browser." + next]) }
     }
 
     Ui.PickerRow {
-      label: "Terminal"
+      label: Ui.Strings.t("defaults.terminal")
       value: page.app.group("terminal").current
       options: page.app.groupOptions("terminal")
       onPicked: function(next) { page.app.run(["menu", "run", "setup.default.terminal." + next]) }
     }
 
     Ui.PickerRow {
-      label: "Editor"
+      label: Ui.Strings.t("defaults.editor")
       value: page.app.group("editor").current
       options: page.app.groupOptions("editor")
       onPicked: function(next) { page.app.run(["menu", "run", "setup.default.editor." + next]) }
     }
 
     Ui.PickerRow {
-      label: "Coding agent"
+      label: Ui.Strings.t("defaults.codingAgent")
       value: page.app.agentsState.current !== undefined ? String(page.app.agentsState.current) : ""
       options: page.app.agentOptions()
       onPicked: function(next) { page.app.run(["agents", "run", next]) }

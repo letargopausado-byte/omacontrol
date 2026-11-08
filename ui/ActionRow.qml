@@ -15,7 +15,7 @@ Local.SettingRow {
   property bool actionEnabled: true
 
   // The row has one button, so activating the row presses it.
-  navKeys: [{ key: "\u21b5", label: "Open" }]
+  navKeys: [{ key: "\u21b5", label: Local.Strings.t("common.open") }]
 
   onNavActivate: if (actionRow.actionEnabled) actionRow.triggered()
 

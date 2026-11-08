@@ -46,6 +46,13 @@ item; a property named `on<Something>` or `<x>Changed`; `QtQuick.Controls`
 imported alongside `qs.Ui`; a child anchored to the `verticalCenter` of a
 parent sized from `childrenRect.height`; a `Repeater` counted as a child.
 
+**Words** (`.claude/rules/i18n.md`) — a word the reader sees written into a
+page instead of the catalog; a sentence built from pieces rather than one
+entry with `%1` holes; a count chosen with `n === 1 ?` instead of `tn()`; a key
+picked inside a ternary; one key serving as both a noun and a verb; a label
+from `lib/` that a page compares; a `$(t …)` in a reader that forks without
+`i18n_load` first. Run `i18n-check.py` rather than reading for these.
+
 **Where data lives** (`.claude/rules/reporting-pages.md`) — something
 expensive, networked or fast-moving added to the state document rather than
 polled by the page that wants it; a reporting page's command missing from

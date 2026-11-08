@@ -242,37 +242,45 @@ search_index() {
   while IFS=$'\t' read -r page file; do
     [[ -n $page && -f $dir/sections/$file ]] || continue
     awk -v page="$page" '
+      # A row reads its words from the catalog, so what is kept here is the
+      # key, marked, and the jq below resolves it in the language on screen.
+      function value(line, prop) {
+        sub("^[ \t]*" prop ": ", "", line)
+        if (line ~ /^Ui\.Strings\.t\("/) {
+          sub(/^Ui\.Strings\.t\("/, "", line)
+          sub(/".*$/, "", line)
+          return "\001" line
+        }
+        sub(/^"/, "", line)
+        sub(/".*$/, "", line)
+        return line
+      }
       # A group heading gives a row context a search can match on: "blur" finds
       # the settings under Blur even when the word is not in their own labels.
-      /^[ \t]*title: "/ {
+      /^[ \t]*title: ("|Ui\.Strings\.t\(")/ {
         # The row before this heading belongs to the group it was written in.
         if (label != "") { print page "\t" group "\t" label "\t" desc; label = "" }
-        line = $0
-        sub(/^[ \t]*title: "/, "", line)
-        sub(/".*$/, "", line)
-        group = line
+        group = value($0, "title")
         next
       }
-      /^[ \t]*label: "/ {
+      /^[ \t]*label: ("|Ui\.Strings\.t\(")/ {
         if (label != "") print page "\t" group "\t" label "\t" desc
-        line = $0
-        sub(/^[ \t]*label: "/, "", line)
-        sub(/".*$/, "", line)
-        label = line
+        label = value($0, "label")
         desc = ""
         next
       }
-      /^[ \t]*description: "/ {
+      /^[ \t]*description: ("|Ui\.Strings\.t\(")/ {
         if (label == "" || desc != "") next
-        line = $0
-        sub(/^[ \t]*description: "/, "", line)
-        sub(/".*$/, "", line)
-        desc = line
+        desc = value($0, "description")
       }
       END { if (label != "") print page "\t" group "\t" label "\t" desc }
     ' "$dir/sections/$file"
-  done <<<"$pages" | jq -R -s -c '
-    [ split("\n")[] | select(length > 0) | split("\t")
+  done <<<"$pages" | jq -R -s -c --slurpfile catalog <(i18n_catalog) '
+    # A hole is filled at runtime with something no source can know — a
+    # device name — so the index keeps the words around it, as it always kept
+    # the literal before a `+`.
+    def word: if startswith("\u0001") then (.[1:] as $k | $catalog[0][$k] // $k | gsub("%[0-9]"; "")) else . end;
+    [ split("\n")[] | select(length > 0) | split("\t") | map(word)
       | { page: .[0], group: .[1], label: .[2], description: .[3] } ]
     | group_by(.page)
     | map({ key: .[0].page, value: map({ group, label, description }) })

@@ -29,12 +29,12 @@ Ui.SectionBody {
   readonly property var gear: app.barState.gear !== undefined ? app.barState.gear : ({})
 
   Ui.SettingGroup {
-    title: "Bar button"
-    note: page.inBar ? "" : "Add OmaControl to the bar to use these."
+    title: Ui.Strings.t("omaControl.barButton")
+    note: page.inBar ? "" : Ui.Strings.t("omaControl.addToBar")
 
     Ui.SwitchRow {
-      label: "Show active-switch count"
-      description: "Counts Night light, Do not disturb and Stay awake on the gear."
+      label: Ui.Strings.t("omaControl.showActiveSwitchCount")
+      description: Ui.Strings.t("omaControl.countsNightLightDoNot")
       enabled: page.inBar
       checked: page.gear.activeSwitchCount !== false
       onRequested: function(next) { page.app.set("bar-active-switch-count", next ? "true" : "false") }
@@ -43,8 +43,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Show network warning"
-      description: "Marks the gear when there is no network at all. A click then opens Network."
+      label: Ui.Strings.t("omaControl.showNetworkWarning")
+      description: Ui.Strings.t("omaControl.marksTheGearWhenThere")
       enabled: page.inBar
       checked: page.gear.networkWarning !== false
       onRequested: function(next) { page.app.set("bar-network-warning", next ? "true" : "false") }
@@ -53,8 +53,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Show battery warnings"
-      description: "Marks the gear when the laptop or a Bluetooth device is at 10 % or under. A click then opens Power or Bluetooth."
+      label: Ui.Strings.t("omaControl.showBatteryWarnings")
+      description: Ui.Strings.t("omaControl.marksTheGearWhenThe")
       enabled: page.inBar
       checked: page.gear.batteryWarnings !== false
       onRequested: function(next) { page.app.set("bar-battery-warnings", next ? "true" : "false") }

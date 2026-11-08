@@ -38,10 +38,10 @@ Ui.SectionBody {
     var at = Date.parse(iso)
     if (isNaN(at)) return ""
     var minutes = Math.round((at - Date.now()) / 60000)
-    if (minutes <= 0) return "now"
-    if (minutes < 90) return "in " + minutes + " min"
-    if (minutes < 1440) return "in " + Math.round(minutes / 60) + " h"
-    return Qt.formatDateTime(new Date(at), "ddd HH:mm")
+    if (minutes <= 0) return Ui.Strings.t("usage.resetsNow")
+    if (minutes < 90) return Ui.Strings.t("usage.inMinutes").arg(minutes)
+    if (minutes < 1440) return Ui.Strings.t("usage.inHours").arg(Math.round(minutes / 60))
+    return page.app.formatDate(new Date(at), "ddd HH:mm")
   }
 
   readonly property string headerNote: {
@@ -53,7 +53,7 @@ Ui.SectionBody {
 
   property Component headerControl: Component {
     Ui.Chip {
-      text: "Refresh"
+      text: Ui.Strings.t("usage.refresh")
       onClicked: page.app.run(["usage", "refresh"])
     }
   }
@@ -72,8 +72,8 @@ Ui.SectionBody {
     visible: !searchEmpty && page.app.usage.provider !== undefined && page.app.usage.provider === ""
 
     Ui.ReadingRow {
-      label: "No agent usage to report"
-      description: "Nothing on this machine collects it. Omarchy ships collectors for Claude Code, Codex and Fireworks."
+      label: Ui.Strings.t("usage.noAgentUsageToReport")
+      description: Ui.Strings.t("usage.nothingOnThisMachineCollects")
     }
   }
 
@@ -84,16 +84,16 @@ Ui.SectionBody {
   // the only way to do that in a SettingRow was a hardcoded margin that any
   // change to the text would break. The table already lines up columns.
   Ui.SettingGroup {
-    title: "Limits"
+    title: Ui.Strings.t("usage.limits")
     note: page.app.usage.updatedAt !== undefined && page.app.usage.updatedAt !== ""
-      ? "The provider's own figures, read " + page.app.usage.updatedAt.slice(11, 16) + "." : ""
+      ? Ui.Strings.t("usage.providerFigures").arg(page.app.usage.updatedAt.slice(11, 16)) : ""
     visible: !searchEmpty && page.limits.length > 0
 
     Ui.DataTable {
       columns: [
-        { title: "Limit", weight: 2 },
-        { title: "Used", weight: 2 },
-        { title: "Resets", weight: 1.4, align: "right" }
+        { title: Ui.Strings.t("usage.limit"), weight: 2 },
+        { title: Ui.Strings.t("usage.used"), weight: 2 },
+        { title: Ui.Strings.t("usage.resets"), weight: 1.4, align: "right" }
       ]
       rows: {
         var out = []
@@ -114,9 +114,9 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Last 7 days"
+    title: Ui.Strings.t("usage.last7Days")
     note: page.app.usage.prompts !== null && page.app.usage.prompts !== undefined
-      ? page.app.usage.prompts + " prompts all told · " + page.app.formatTokens(page.app.usage.tokens) + " tokens"
+      ? Ui.Strings.tn("usage.promptsAndTokens", page.app.usage.prompts).arg(page.app.usage.prompts).arg(page.app.formatTokens(page.app.usage.tokens))
       : ""
     visible: !searchEmpty && page.days.length > 0
 
@@ -177,7 +177,7 @@ Ui.SectionBody {
               textFormat: Text.PlainText
               anchors.horizontalCenter: parent.horizontalCenter
               anchors.bottom: parent.bottom
-              text: Qt.formatDateTime(new Date(modelData.date + "T12:00:00"), "ddd")
+              text: page.app.formatDate(new Date(modelData.date + "T12:00:00"), "ddd")
               color: Ui.Palette.muted
               font.family: Ui.Palette.fontFamily
               font.pixelSize: Style.font.caption
@@ -190,14 +190,14 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "By model"
+    title: Ui.Strings.t("usage.byModel")
     visible: !searchEmpty && page.models.length > 0
 
     Ui.DataTable {
       columns: [
-        { title: "Model", weight: 2.4 },
-        { title: "Tokens", weight: 1.2, align: "right" },
-        { title: "Share", weight: 1.4 }
+        { title: Ui.Strings.t("usage.model"), weight: 2.4 },
+        { title: Ui.Strings.t("usage.tokens"), weight: 1.2, align: "right" },
+        { title: Ui.Strings.t("usage.share"), weight: 1.4 }
       ]
       rows: {
         var out = []

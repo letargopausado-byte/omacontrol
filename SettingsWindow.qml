@@ -472,22 +472,31 @@ Item {
   function formatSpan(seconds) {
     var n = Number(seconds)
     if (!isFinite(n) || n < 0) return "—"
-    if (n < 60) return Math.round(n) + " s"
-    if (n < 3600) return Math.floor(n / 60) + " min " + Math.round(n % 60) + " s"
+    if (n < 60) return Ui.Strings.t("window.spanSeconds").arg(Math.round(n))
+    if (n < 3600) return Ui.Strings.t("window.spanMinutes").arg(Math.floor(n / 60)).arg(Math.round(n % 60))
     var hours = Math.floor(n / 3600)
-    return hours + " h " + Math.round((n % 3600) / 60) + " min"
+    return Ui.Strings.t("window.spanHours").arg(hours).arg(Math.round((n % 3600) / 60))
   }
 
   // How long ago something happened, said the way someone would say it. Takes
   // a unix stamp because that is what a shell reader can hand over without
   // committing to a format the window would then have to parse back.
+  // A date in the reader's language: month and day names from the locale
+  // Omarchy's registry gives that language, the order of the parts from the
+  // catalog, since "November 5, 2026" and "5 de noviembre de 2026" differ in
+  // more than their words.
+  readonly property var dateLocale: Qt.locale(I18n.formatLocale)
+  function formatDate(date, format) {
+    return date.toLocaleString(dateLocale, format)
+  }
+
   function formatWhen(stamp) {
     var seconds = Math.floor(Date.now() / 1000) - Number(stamp)
     if (!isFinite(seconds)) return ""
-    if (seconds < 90) return "just now"
-    if (seconds < 5400) return Math.round(seconds / 60) + " min ago"
-    if (seconds < 172800) return Math.round(seconds / 3600) + " h ago"
-    return Math.round(seconds / 86400) + " days ago"
+    if (seconds < 90) return Ui.Strings.t("window.justNow")
+    if (seconds < 5400) return Ui.Strings.t("window.minutesAgo").arg(Math.round(seconds / 60))
+    if (seconds < 172800) return Ui.Strings.t("window.hoursAgo").arg(Math.round(seconds / 3600))
+    return Ui.Strings.tn("window.daysAgo", Math.round(seconds / 86400)).arg(Math.round(seconds / 86400))
   }
 
   // Token counts run to the hundreds of millions, and formatBytes would call
@@ -517,13 +526,13 @@ Item {
   // What the switch says underneath itself: the devices in hand, or why there
   // are none.
   readonly property string bluetoothSummary: {
-    if (bluetooth.available === false) return "No Bluetooth adapter"
-    if (bluetooth.powered !== true) return "Off"
+    if (bluetooth.available === false) return Ui.Strings.t("window.noBluetoothAdapter")
+    if (bluetooth.powered !== true) return Ui.Strings.t("common.off")
     var devices = bluetooth.devices !== undefined ? bluetooth.devices : []
     var names = []
     for (var i = 0; i < devices.length; i++)
       if (devices[i].connected) names.push(devices[i].name !== "" ? devices[i].name : devices[i].address)
-    return names.length === 0 ? "Nothing connected" : "Connected to " + names.join(", ")
+    return names.length === 0 ? Ui.Strings.t("window.nothingConnected") : Ui.Strings.t("window.connectedTo").arg(names.join(", "))
   }
 
   // While the Network page is open it polls Wi-Fi on its own, far more often
@@ -823,7 +832,7 @@ Item {
   // Automatic plus whichever bands this radio and access point actually
   // offer, so a 2.4-only network never shows a 5 GHz choice that cannot work.
   function bandOptions() {
-    var out = [{ value: "auto", label: "Automatic" }]
+    var out = [{ value: "auto", label: Ui.Strings.t("window.automatic") }]
     var available = wifiBand.available !== undefined ? wifiBand.available : []
     for (var i = 0; i < available.length; i++)
       out.push({ value: String(available[i]), label: String(available[i]) + " GHz" })
@@ -988,12 +997,11 @@ Item {
   // Said the same way in both places it appears — beside the window's name and
   // beside the page's — so the two read as one fact rather than two counts.
   readonly property string changedLabel: changedSettings.length === 0 ? ""
-    : (changedSettings.length === 1 ? "1 setting changed"
-                                    : changedSettings.length + " settings changed")
+    : Ui.Strings.tn("window.settingsChanged", changedSettings.length).arg(changedSettings.length)
 
   // The far end of the keyhint bar, and only when something is actually
   // happening. "Ready" was none of those — it reported that nothing was.
-  readonly property string statusNote: busy ? "Applying\u2026" : (!loaded ? "Loading\u2026" : "")
+  readonly property string statusNote: busy ? Ui.Strings.t("window.applying") : (!loaded ? Ui.Strings.t("window.loading") : "")
   // Both families: a Hyprland key is dropped, anything else is written back
   // the way it was found. The helper knows which is which.
   function resetSetting(key) { run(["reset", key]) }
@@ -1268,8 +1276,8 @@ Item {
     var keys = []
 
     if (searchFocused) {
-      keys.push({ keys: ["\u21b5"], label: "To settings" })
-      keys.push({ keys: ["esc"], label: "Clear" })
+      keys.push({ keys: ["\u21b5"], label: Ui.Strings.t("window.toSettings") })
+      keys.push({ keys: ["esc"], label: Ui.Strings.t("window.clear") })
       return keys
     }
 
@@ -1283,14 +1291,14 @@ Item {
     if (row && row.changed === true)
       keys.push({ keys: ["\u232b"],
                   label: row.navResetLabel !== undefined && String(row.navResetLabel) !== ""
-                    ? String(row.navResetLabel) : "Reset" })
+                    ? String(row.navResetLabel) : Ui.Strings.t("window.reset") })
 
     if (navBlocked) return keys
 
-    keys.push({ keys: ["\u2191", "\u2193"], label: "Move" })
-    if (orderedPages.length > 1) keys.push({ keys: ["alt", "\u2191", "\u2193"], label: "Change page" })
-    keys.push({ keys: ["/"], label: "Search" })
-    keys.push({ keys: ["esc"], label: "Close" })
+    keys.push({ keys: ["\u2191", "\u2193"], label: Ui.Strings.t("window.move") })
+    if (orderedPages.length > 1) keys.push({ keys: ["alt", "\u2191", "\u2193"], label: Ui.Strings.t("window.changePage") })
+    keys.push({ keys: ["/"], label: Ui.Strings.t("window.search") })
+    keys.push({ keys: ["esc"], label: Ui.Strings.t("window.close") })
     return keys
   }
 
@@ -1638,45 +1646,45 @@ Item {
   // software on top.
   readonly property var navBlocks: [
     { title: "", items: [
-      { id: "overview", label: "Overview", icon: "\uf0e4", pages: ["overview"] },
-      { id: "net", label: "Network", icon: "\uf1eb", pages: ["network"] },
-      { id: "bt", label: "Bluetooth", icon: "\uf293", pages: ["bluetooth"] }
+      { id: "overview", label: Ui.Strings.t("window.overview"), icon: "\uf0e4", pages: ["overview"] },
+      { id: "net", label: Ui.Strings.t("window.network"), icon: "\uf1eb", pages: ["network"] },
+      { id: "bt", label: Ui.Strings.t("window.bluetooth"), icon: "\uf293", pages: ["bluetooth"] }
     ] },
-    { title: "Experience", items: [
-      { id: "look", label: "Appearance", icon: "\uf1fc", pages: ["theme", "font", "wallpaper", "branding"] },
-      { id: "fx", label: "Effects", icon: "\uf0d0", pages: ["effects"] },
-      { id: "bar", label: "Bar", icon: "\uf0c9", pages: ["bar"] },
-      { id: "wm", label: "Windows", icon: "\uf2d0", pages: ["windows", "layout", "groups"] },
-      { id: "ws", label: "Workspaces", icon: "\uf00a", pages: ["workspaces"] },
-      { id: "kb", label: "Keyboard", icon: "\uf11c", pages: ["keyboard", "bindings", "compose"] },
-      { id: "ptr", label: "Mouse & touchpad", icon: "\uf245", pages: ["pointer"] },
-      { id: "sound", label: "Sound", icon: "\uf028", pages: ["audio"] },
-      { id: "displays", label: "Displays", icon: "\uf108", pages: ["displays"] }
+    { title: Ui.Strings.t("window.experience"), items: [
+      { id: "look", label: Ui.Strings.t("window.appearance"), icon: "\uf1fc", pages: ["theme", "font", "wallpaper", "branding"] },
+      { id: "fx", label: Ui.Strings.t("window.effects"), icon: "\uf0d0", pages: ["effects"] },
+      { id: "bar", label: Ui.Strings.t("window.bar"), icon: "\uf0c9", pages: ["bar"] },
+      { id: "wm", label: Ui.Strings.t("window.windows"), icon: "\uf2d0", pages: ["windows", "layout", "groups"] },
+      { id: "ws", label: Ui.Strings.t("window.workspaces"), icon: "\uf00a", pages: ["workspaces"] },
+      { id: "kb", label: Ui.Strings.t("window.keyboard"), icon: "\uf11c", pages: ["keyboard", "bindings", "compose"] },
+      { id: "ptr", label: Ui.Strings.t("window.mouseTouchpad"), icon: "\uf245", pages: ["pointer"] },
+      { id: "sound", label: Ui.Strings.t("window.sound"), icon: "\uf028", pages: ["audio"] },
+      { id: "displays", label: Ui.Strings.t("window.displays"), icon: "\uf108", pages: ["displays"] }
     ] },
-    { title: "System", items: [
+    { title: Ui.Strings.t("window.system"), items: [
       // A bolt: the page is the battery and the profile the machine runs at,
       // which a desktop has too. A power symbol read as shutting the machine
       // down, and a battery promised a page a desktop does not get.
-      { id: "pwr", label: "Power", icon: "\uf0e7", pages: ["power"] },
-      { id: "idle", label: "Idle & Lock", icon: "\uf023", pages: ["idle"] },
-      { id: "security", label: "Security", icon: "\uf132", pages: ["security"] },
-      { id: "disk", label: "Storage", icon: "\uf0a0", pages: ["disk"] },
-      { id: "proc", label: "Processes", icon: "\uf080", pages: ["processes"] },
-      { id: "time", label: "Date & Time", icon: "\uf017", pages: ["datetime"] },
-      { id: "about", label: "About", icon: "\uf05a", pages: ["about"] }
+      { id: "pwr", label: Ui.Strings.t("window.power"), icon: "\uf0e7", pages: ["power"] },
+      { id: "idle", label: Ui.Strings.t("window.idleLock"), icon: "\uf023", pages: ["idle"] },
+      { id: "security", label: Ui.Strings.t("window.security"), icon: "\uf132", pages: ["security"] },
+      { id: "disk", label: Ui.Strings.t("window.storage"), icon: "\uf0a0", pages: ["disk"] },
+      { id: "proc", label: Ui.Strings.t("window.processes"), icon: "\uf080", pages: ["processes"] },
+      { id: "time", label: Ui.Strings.t("window.dateTime"), icon: "\uf017", pages: ["datetime"] },
+      { id: "about", label: Ui.Strings.t("window.about"), icon: "\uf05a", pages: ["about"] }
     ] },
-    { title: "Apps & Packages", items: [
-      { id: "defaults", label: "Default Apps", icon: "\uf008", pages: ["apps.defaults"] },
-      { id: "apps", label: "Apps", icon: "\uf009", pages: ["apps.list"] },
-      { id: "pkg", label: "Packages", icon: "\uf187", pages: ["packages"] },
-      { id: "plugins", label: "Plugins", icon: "\uf1e6", pages: ["plugins"] },
-      { id: "usage", label: "Usage", icon: "\uf201", pages: ["usage"] },
-      { id: "cfg", label: "Configs", icon: "\uf121", pages: ["apps.herdr", "apps.tmux", "apps.nvim"] }
+    { title: Ui.Strings.t("window.appsPackages"), items: [
+      { id: "defaults", label: Ui.Strings.t("window.defaultApps"), icon: "\uf008", pages: ["apps.defaults"] },
+      { id: "apps", label: Ui.Strings.t("window.apps"), icon: "\uf009", pages: ["apps.list"] },
+      { id: "pkg", label: Ui.Strings.t("window.packages"), icon: "\uf187", pages: ["packages"] },
+      { id: "plugins", label: Ui.Strings.t("window.plugins"), icon: "\uf1e6", pages: ["plugins"] },
+      { id: "usage", label: Ui.Strings.t("window.usage"), icon: "\uf201", pages: ["usage"] },
+      { id: "cfg", label: Ui.Strings.t("window.configs"), icon: "\uf121", pages: ["apps.herdr", "apps.tmux", "apps.nvim"] }
     ] },
     // Last and apart: everything above configures the desktop, and this is
     // the one block about the window itself.
-    { title: "OmaControl", items: [
-      { id: "omacontrol", label: "Settings", icon: "\uf013", pages: ["omacontrol"] }
+    { title: Ui.Strings.t("window.omacontrol"), items: [
+      { id: "omacontrol", label: Ui.Strings.t("window.settings"), icon: "\uf013", pages: ["omacontrol"] }
     ] }
   ]
 
@@ -1707,46 +1715,46 @@ Item {
   // wants the pages and not the nesting, and walking two levels everywhere it
   // asked is how the tree version grew its bugs.
   readonly property var pageTitles: ({
-    "overview": "Overview",
-    "network": "Network",
+    "overview": Ui.Strings.t("page.overview"),
+    "network": Ui.Strings.t("page.network"),
     "bluetooth": "Bluetooth",
-    "audio": "Audio",
-    "displays": "Displays",
-    "bar": "Bar",
-    "effects": "Effects",
+    "audio": Ui.Strings.t("page.audio"),
+    "displays": Ui.Strings.t("page.displays"),
+    "bar": Ui.Strings.t("page.bar"),
+    "effects": Ui.Strings.t("page.effects"),
     // "General", not "Windows": the rail is already called Windows, and a page
     // that repeats its rail's name tells the reader nothing — the crumb read
     // "WINDOWS / Windows". General is what it is: the settings that are about
     // windows in general rather than about the layout, the workspaces or the
     // groups beside it.
-    "windows": "General",
-    "layout": "Layout",
-    "workspaces": "Workspaces",
-    "groups": "Groups",
-    "keyboard": "Keyboard",
-    "bindings": "Keybindings",
-    "compose": "Compose Keys",
-    "pointer": "Mouse & Touchpad",
-    "power": "Power",
-    "idle": "Idle & Lock",
-    "security": "Security",
-    "disk": "Disk",
-    "processes": "Processes",
-    "datetime": "Date & Time",
-    "about": "About",
-    "apps.list": "Apps",
-    "apps.defaults": "Defaults",
-    "packages": "Packages",
-    "plugins": "Plugins",
-    "usage": "Agent usage",
+    "windows": Ui.Strings.t("page.windows"),
+    "layout": Ui.Strings.t("page.layout"),
+    "workspaces": Ui.Strings.t("page.workspaces"),
+    "groups": Ui.Strings.t("page.groups"),
+    "keyboard": Ui.Strings.t("page.keyboard"),
+    "bindings": Ui.Strings.t("page.bindings"),
+    "compose": Ui.Strings.t("page.compose"),
+    "pointer": Ui.Strings.t("page.pointer"),
+    "power": Ui.Strings.t("page.power"),
+    "idle": Ui.Strings.t("page.idle"),
+    "security": Ui.Strings.t("page.security"),
+    "disk": Ui.Strings.t("page.disk"),
+    "processes": Ui.Strings.t("page.processes"),
+    "datetime": Ui.Strings.t("page.datetime"),
+    "about": Ui.Strings.t("page.about"),
+    "apps.list": Ui.Strings.t("page.appslist"),
+    "apps.defaults": Ui.Strings.t("page.appsdefaults"),
+    "packages": Ui.Strings.t("page.packages"),
+    "plugins": Ui.Strings.t("page.plugins"),
+    "usage": Ui.Strings.t("page.usage"),
     "apps.herdr": "Herdr",
     "apps.tmux": "Tmux",
     "apps.nvim": "Neovim",
-    "theme": "Theme",
-    "font": "Font",
-    "wallpaper": "Wallpaper",
-    "branding": "Branding",
-    "omacontrol": "OmaControl settings"
+    "theme": Ui.Strings.t("page.theme"),
+    "font": Ui.Strings.t("page.font"),
+    "wallpaper": Ui.Strings.t("page.wallpaper"),
+    "branding": Ui.Strings.t("page.branding"),
+    "omacontrol": Ui.Strings.t("page.omacontrol")
   })
 
   // Which item is open. Driven by the page rather than held on its own: an
@@ -1926,10 +1934,10 @@ Item {
       anchors.fill: parent
       z: 100
       message: root.changedSettings.length === 1
-        ? "Reset the one setting changed from this window?"
-        : "Reset all " + root.changedSettings.length + " settings changed from this window?"
-      confirmText: "Reset all"
-      cancelText: "Cancel"
+        ? Ui.Strings.t("window.resetOne")
+        : Ui.Strings.t("window.resetAllQuestion").arg(root.changedSettings.length)
+      confirmText: Ui.Strings.t("window.resetAll")
+      cancelText: Ui.Strings.t("common.cancel")
       background: root.background
       foreground: root.foreground
       fontFamily: root.fontFamily
@@ -1944,7 +1952,7 @@ Item {
       id: askDialog
       anchors.fill: parent
       z: 100
-      cancelText: "Cancel"
+      cancelText: Ui.Strings.t("common.cancel")
       background: root.background
       foreground: root.foreground
       fontFamily: root.fontFamily
@@ -2089,7 +2097,7 @@ Item {
           Text {
             textFormat: Text.PlainText
             anchors.verticalCenter: parent.verticalCenter
-            text: "OmaControl"
+            text: Ui.Strings.t("window.omacontrol")
             color: root.foreground
             font.family: root.fontFamily
             font.pixelSize: Style.font.title
@@ -2121,8 +2129,7 @@ Item {
             textFormat: Text.PlainText
             anchors.verticalCenter: parent.verticalCenter
             visible: !root.busy && root.loaded && root.selfBehind > 0
-            text: "\uf0e7  Update available ("
-              + (root.selfBehind === 1 ? "1 commit behind" : root.selfBehind + " commits behind") + ")"
+            text: "\uf0e7  " + Ui.Strings.tn("window.updateAvailable", root.selfBehind).arg(root.selfBehind)
             color: root.accent
             font.family: root.fontFamily
             font.pixelSize: Style.font.caption
@@ -2158,7 +2165,7 @@ Item {
           Ui.Chip {
             anchors.verticalCenter: parent.verticalCenter
             visible: root.changedSettings.length > 0
-            text: "Undo all"
+            text: Ui.Strings.t("window.undoAll")
             onClicked: resetAllDialog.opened = true
           }
 
@@ -2242,7 +2249,7 @@ Item {
                   // inset, and replacing it means re-deriving something the kit
                   // already gets right.
                   horizontalPadding: Style.space(26)
-                  placeholderText: "Search settings"
+                  placeholderText: Ui.Strings.t("window.searchSettings")
                   foreground: root.foreground
                   accent: root.accent
                   font.family: root.fontFamily
@@ -2462,7 +2469,7 @@ Item {
                   width: parent.width
                   visible: root.searching && root.sidebarBlocks.length === 0
                   padding: Style.space(10)
-                  text: "Nothing here for what you typed."
+                  text: Ui.Strings.t("window.nothingHereForWhatYou")
                   wrapMode: Text.WordWrap
                   color: root.muted
                   font.family: root.fontFamily

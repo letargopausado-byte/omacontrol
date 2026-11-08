@@ -9,7 +9,7 @@ Local.SettingRow {
 
   // Space or Enter flips it, the way clicking it would.
   onNavActivate: switchRow.requested(!switchRow.checked)
-  navKeys: [{ key: "Space", label: "Toggle" }]
+  navKeys: [{ key: "Space", label: Local.Strings.t("ui.switchRow.toggle") }]
 
   ToggleSwitch {
     anchors.right: parent.right

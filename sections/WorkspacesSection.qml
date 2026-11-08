@@ -43,16 +43,15 @@ Ui.SectionBody {
   // way in, since an application bound to a workspace is a thing people come
   // to this page looking for.
   Ui.SettingGroup {
-    title: "Applications"
+    title: Ui.Strings.t("workspaces.applications")
     note: page.rules.length === 0
-      ? "No application is bound to a workspace yet."
-      : (page.rules.length === 1 ? "One application opens somewhere of its own."
-                            : page.rules.length + " applications open somewhere of their own.")
+      ? Ui.Strings.t("workspaces.noRules")
+      : Ui.Strings.tn("workspaces.rulesCount", page.rules.length).replace("%1", page.rules.length)
 
     Ui.ActionRow {
-      label: "Where applications open"
-      description: "Which workspace an application opens on, how it shows, and whether it starts at login."
-      buttonText: "Apps"
+      label: Ui.Strings.t("workspaces.whereApplicationsOpen")
+      description: Ui.Strings.t("workspaces.whichWorkspaceAnApplicationOpens")
+      buttonText: Ui.Strings.t("workspaces.apps")
       onTriggered: page.app.pageId = "apps.list"
     }
   }
@@ -68,16 +67,16 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Workspace settings"
-    note: page.unsetWorkspaces.length === 0 ? "Every workspace is set up." : ""
+    title: Ui.Strings.t("workspaces.workspaceSettings")
+    note: page.unsetWorkspaces.length === 0 ? Ui.Strings.t("workspaces.allSetUp") : ""
 
     Ui.PickerRow {
-      label: "Set up a workspace"
+      label: Ui.Strings.t("workspaces.setUpAWorkspace")
       visible: page.unsetWorkspaces.length > 0
-      description: "Its display, name, layout, and whether it stays when empty."
+      description: Ui.Strings.t("workspaces.itsDisplayNameLayoutAnd")
       value: ""
-      options: [{ value: "", label: "Pick a workspace…" }].concat(page.unsetWorkspaces.map(function(id) {
-        return { value: id, label: "Workspace " + id }
+      options: [{ value: "", label: Ui.Strings.t("workspaces.pickAWorkspace") }].concat(page.unsetWorkspaces.map(function(id) {
+        return { value: id, label: Ui.Strings.t("common.workspaceN").arg(id) }
       }))
       onPicked: function(next) { if (next !== "") page.app.run(["workspaces", "setup", "add", next]) }
     }
@@ -97,60 +96,60 @@ Ui.SectionBody {
       readonly property bool theirs: modelData.theirs === true
 
       width: parent.width
-      title: "Workspace " + id
+      title: Ui.Strings.t("common.workspaceN").arg(id)
 
       Ui.TextRow {
-        label: "Name"
-        description: "Shown in the bar instead of the number."
+        label: Ui.Strings.t("common.name")
+        description: Ui.Strings.t("workspaces.shownInTheBarInstead")
         value: String(setupGroup.modelData.name || "")
         placeholder: setupGroup.id
         onCommitted: function(next) { page.app.run(["workspaces", "setup", "set", setupGroup.id, "name", next]) }
       }
 
       Ui.PickerRow {
-        label: "Display"
+        label: Ui.Strings.t("workspaces.display")
         visible: page.displays.length > 1
         value: String(setupGroup.modelData.monitor || "")
-        options: page.displayOptions("Any")
+        options: page.displayOptions(Ui.Strings.t("workspaces.anyDisplay"))
         onPicked: function(next) { page.app.run(["workspaces", "setup", "set", setupGroup.id, "monitor", next]) }
       }
 
       Ui.SwitchRow {
-        label: "Default on its display"
-        description: "The workspace a display shows when it is plugged in."
+        label: Ui.Strings.t("workspaces.defaultOnItsDisplay")
+        description: Ui.Strings.t("workspaces.theWorkspaceADisplayShows")
         visible: String(setupGroup.modelData.monitor || "") !== ""
         checked: setupGroup.modelData.default === true
         onRequested: function(next) { page.app.run(["workspaces", "setup", "set", setupGroup.id, "default", next ? "true" : "false"]) }
       }
 
       Ui.SwitchRow {
-        label: "Keep when empty"
-        description: "Stays in the bar with no windows on it."
+        label: Ui.Strings.t("workspaces.keepWhenEmpty")
+        description: Ui.Strings.t("workspaces.staysInTheBarWith")
         checked: setupGroup.modelData.persistent === true
         onRequested: function(next) { page.app.run(["workspaces", "setup", "set", setupGroup.id, "persistent", next ? "true" : "false"]) }
       }
 
       Ui.ChoiceRow {
-        label: "Layout"
+        label: Ui.Strings.t("common.layout")
         options: [
-          { value: "", label: "Default" },
-          { value: "dwindle", label: "Dwindle" },
-          { value: "master", label: "Master" },
-          { value: "scrolling", label: "Scrolling" }
+          { value: "", label: Ui.Strings.t("workspaces.default") },
+          { value: "dwindle", label: Ui.Strings.t("workspaces.dwindle") },
+          { value: "master", label: Ui.Strings.t("workspaces.master") },
+          { value: "scrolling", label: Ui.Strings.t("workspaces.scrolling") }
         ]
         value: String(setupGroup.modelData.layout || "")
         onPicked: function(next) { page.app.run(["workspaces", "setup", "set", setupGroup.id, "layout", next]) }
       }
 
       Ui.SwitchRow {
-        label: "Borderless, no gaps"
-        description: "Windows edge to edge with no borders, rounding or decorations."
+        label: Ui.Strings.t("workspaces.borderlessNoGaps")
+        description: Ui.Strings.t("workspaces.windowsEdgeToEdgeWith")
         checked: setupGroup.modelData.minimal === true
         onRequested: function(next) { page.app.run(["workspaces", "setup", "set", setupGroup.id, "minimal", next ? "true" : "false"]) }
       }
 
       Ui.ActionRow {
-        buttonText: "Remove"
+        buttonText: Ui.Strings.t("common.remove")
         onTriggered: page.app.run(["workspaces", "setup", "remove", setupGroup.id])
       }
     }

@@ -322,6 +322,18 @@ omarchy bar set io.github.twiking.omacontrol showBatteryWarnings false --json
 Hovering over the gear still lists everything, whatever the badge shows. Set an
 option back to `true` to bring that part of the badge back.
 
+## Languages
+
+The window follows the language picked under **Setup > Language**, the same
+way the rest of the shell does, and switches with it without a restart. It
+ships in English and Spanish; a string missing from a language falls back to
+English on its own.
+
+Adding a language is one file: copy `i18n/en.json` to `i18n/<code>.json`,
+using a code from Omarchy's language list (or its base, as `es` covers every
+Spanish), translate the values, and keep each `%1` where the sentence needs
+it. Anything that reads the same can be left out.
+
 ## How it writes
 
 Your config files are never parsed and rewritten, since that is how a settings

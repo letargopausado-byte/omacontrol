@@ -2,7 +2,9 @@
 Type=Application
 Name=OmaControl
 GenericName=System Settings
+GenericName[es]=Ajustes del sistema
 Comment=One window for appearance, bar, windows, input, displays, idle, plugins and compose keys
+Comment[es]=Una sola ventana para la apariencia, la barra, las ventanas, la entrada, las pantallas, la inactividad, los plugins y las teclas Compose
 Exec=omarchy-shell omacontrol toggle
 TryExec=omarchy-shell
 Icon=@ICON@
@@ -10,4 +12,5 @@ Terminal=false
 StartupNotify=false
 Categories=Settings;DesktopSettings;HardwareSettings;
 Keywords=settings;omarchy;hyprland;preferences;appearance;bar;keyboard;audio;display;plugins;
+Keywords[es]=ajustes;configuración;omarchy;hyprland;preferencias;apariencia;barra;teclado;audio;pantalla;plugins;
 X-OmaControl-Managed=true

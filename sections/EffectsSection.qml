@@ -16,14 +16,14 @@ Ui.SectionBody {
   readonly property bool glowOn: app.hyprValue("glow", false) === true
 
   Ui.SettingGroup {
-    title: "Blur"
-    note: "Blurs whatever is behind translucent windows and layers. Costs GPU."
+    title: Ui.Strings.t("effects.blur")
+    note: Ui.Strings.t("effects.blursWhateverIsBehindTranslucent")
 
     // "Enabled", not the effect's own name: the heading above has already
     // said which effect this is, and a row repeating it read as a second,
     // different Blur.
     Ui.SwitchRow {
-      label: "Enabled"
+      label: Ui.Strings.t("common.enabled")
       checked: page.blurOn
       onRequested: function(next) { page.app.setHypr("blur", next ? "true" : "false") }
       changed: page.app.isChanged("blur")
@@ -31,8 +31,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Size"
-      description: "Blur radius."
+      label: Ui.Strings.t("common.size")
+      description: Ui.Strings.t("effects.blurRadius")
       enabled: page.blurOn
       value: page.app.hyprValue("blur-size", 8)
       from: 1
@@ -43,8 +43,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Passes"
-      description: "More passes is smoother and slower. 3 is a good ceiling."
+      label: Ui.Strings.t("effects.passes")
+      description: Ui.Strings.t("effects.morePassesIsSmootherAnd")
       enabled: page.blurOn
       value: page.app.hyprValue("blur-passes", 1)
       from: 1
@@ -55,8 +55,8 @@ Ui.SectionBody {
     }
 
     Ui.FactorRow {
-      label: "Noise"
-      description: "Grain mixed into the blur to hide banding."
+      label: Ui.Strings.t("effects.noise")
+      description: Ui.Strings.t("effects.grainMixedIntoTheBlur")
       enabled: page.blurOn
       minimum: 0
       maximum: 0.2
@@ -67,7 +67,7 @@ Ui.SectionBody {
     }
 
     Ui.FactorRow {
-      label: "Contrast"
+      label: Ui.Strings.t("effects.contrast")
       enabled: page.blurOn
       minimum: 0
       maximum: 2
@@ -78,7 +78,7 @@ Ui.SectionBody {
     }
 
     Ui.FactorRow {
-      label: "Brightness"
+      label: Ui.Strings.t("effects.brightness")
       enabled: page.blurOn
       minimum: 0
       maximum: 2
@@ -89,8 +89,8 @@ Ui.SectionBody {
     }
 
     Ui.PercentRow {
-      label: "Vibrancy"
-      description: "Saturation boost for the blurred image."
+      label: Ui.Strings.t("effects.vibrancy")
+      description: Ui.Strings.t("effects.saturationBoostForTheBlurred")
       enabled: page.blurOn
       value: page.app.hyprValue("blur-vibrancy", 0.17)
       onCommitted: function(next) { page.app.setHypr("blur-vibrancy", next) }
@@ -99,8 +99,8 @@ Ui.SectionBody {
     }
 
     Ui.PercentRow {
-      label: "Vibrancy darkness"
-      description: "How much vibrancy applies to dark areas."
+      label: Ui.Strings.t("effects.vibrancyDarkness")
+      description: Ui.Strings.t("effects.howMuchVibrancyAppliesTo")
       enabled: page.blurOn
       value: page.app.hyprValue("blur-vibrancy-darkness", 0)
       onCommitted: function(next) { page.app.setHypr("blur-vibrancy-darkness", next) }
@@ -109,8 +109,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "X-ray"
-      description: "Blurs the wallpaper instead of the windows underneath."
+      label: Ui.Strings.t("effects.xRay")
+      description: Ui.Strings.t("effects.blursTheWallpaperInsteadOf")
       enabled: page.blurOn
       checked: page.app.hyprValue("blur-xray", false) === true
       onRequested: function(next) { page.app.setHypr("blur-xray", next ? "true" : "false") }
@@ -119,8 +119,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Special workspace"
-      description: "Blurs behind special workspaces."
+      label: Ui.Strings.t("effects.specialWorkspace")
+      description: Ui.Strings.t("effects.blursBehindSpecialWorkspaces")
       enabled: page.blurOn
       checked: page.app.hyprValue("blur-special", false) === true
       onRequested: function(next) { page.app.setHypr("blur-special", next ? "true" : "false") }
@@ -129,8 +129,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Popups"
-      description: "Blurs behind menus and tooltips."
+      label: Ui.Strings.t("effects.popups")
+      description: Ui.Strings.t("effects.blursBehindMenusAndTooltips")
       enabled: page.blurOn
       checked: page.app.hyprValue("blur-popups", false) === true
       onRequested: function(next) { page.app.setHypr("blur-popups", next ? "true" : "false") }
@@ -140,14 +140,14 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Shadow"
-    note: "Drop shadow cast by windows."
+    title: Ui.Strings.t("effects.shadow")
+    note: Ui.Strings.t("effects.dropShadowCastByWindows")
 
     // "Enabled", not the effect's own name: the heading above has already
     // said which effect this is, and a row repeating it read as a second,
     // different Blur.
     Ui.SwitchRow {
-      label: "Enabled"
+      label: Ui.Strings.t("common.enabled")
       checked: page.shadowOn
       onRequested: function(next) { page.app.setHypr("shadow", next ? "true" : "false") }
       changed: page.app.isChanged("shadow")
@@ -155,9 +155,9 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Range"
-      description: "How far the shadow reaches."
-      suffix: "px"
+      label: Ui.Strings.t("effects.range")
+      description: Ui.Strings.t("effects.howFarTheShadowReaches")
+      suffix: Ui.Strings.t("common.px")
       enabled: page.shadowOn
       value: page.app.hyprValue("shadow-range", 4)
       from: 0
@@ -168,8 +168,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Falloff"
-      description: "How sharply the shadow fades out."
+      label: Ui.Strings.t("effects.falloff")
+      description: Ui.Strings.t("effects.howSharplyTheShadowFades")
       enabled: page.shadowOn
       value: page.app.hyprValue("shadow-render-power", 3)
       from: 1
@@ -180,8 +180,8 @@ Ui.SectionBody {
     }
 
     Ui.PercentRow {
-      label: "Scale"
-      description: "Size of the shadow relative to the window."
+      label: Ui.Strings.t("effects.scale")
+      description: Ui.Strings.t("effects.sizeOfTheShadowRelative")
       enabled: page.shadowOn
       value: page.app.hyprValue("shadow-scale", 1)
       onCommitted: function(next) { page.app.setHypr("shadow-scale", next) }
@@ -190,8 +190,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Sharp"
-      description: "Hard-edged shadow with no gradient."
+      label: Ui.Strings.t("effects.sharp")
+      description: Ui.Strings.t("effects.hardEdgedShadowWithNo")
       enabled: page.shadowOn
       checked: page.app.hyprValue("shadow-sharp", false) === true
       onRequested: function(next) { page.app.setHypr("shadow-sharp", next ? "true" : "false") }
@@ -201,14 +201,14 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Glow"
-    note: "Halo around the focused window. Its colour is a separate Hyprland option this page leaves alone."
+    title: Ui.Strings.t("effects.glow")
+    note: Ui.Strings.t("effects.haloAroundTheFocusedWindow")
 
     // "Enabled", not the effect's own name: the heading above has already
     // said which effect this is, and a row repeating it read as a second,
     // different Blur.
     Ui.SwitchRow {
-      label: "Enabled"
+      label: Ui.Strings.t("common.enabled")
       checked: page.glowOn
       onRequested: function(next) { page.app.setHypr("glow", next ? "true" : "false") }
       changed: page.app.isChanged("glow")
@@ -216,9 +216,9 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Range"
-      description: "How far the glow reaches."
-      suffix: "px"
+      label: Ui.Strings.t("effects.range")
+      description: Ui.Strings.t("effects.howFarTheGlowReaches")
+      suffix: Ui.Strings.t("common.px")
       enabled: page.glowOn
       value: page.app.hyprValue("glow-range", 10)
       from: 0
@@ -229,8 +229,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Falloff"
-      description: "How sharply the glow fades out."
+      label: Ui.Strings.t("effects.falloff")
+      description: Ui.Strings.t("effects.howSharplyTheGlowFades")
       enabled: page.glowOn
       value: page.app.hyprValue("glow-render-power", 3)
       from: 1

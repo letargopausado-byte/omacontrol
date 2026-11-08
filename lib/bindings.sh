@@ -119,6 +119,7 @@ edit_bindings() {
 # Every binding Hyprland currently has, as Omarchy reads them, marked with
 # where it came from so the window can offer the right action.
 bindings_state() {
+  i18n_load
   local listed store
   listed=$(capture omarchy-menu-keybindings --print \
     | sed -E 's/[[:space:]]+→[[:space:]]+/\t/' \
@@ -130,7 +131,7 @@ bindings_state() {
   # Omarchy prints "SUPER SHIFT + R" while the config spells it
   # "SUPER + SHIFT + R"; both are the same binding, so both are canonicalised
   # before anything is compared.
-  jq -cn --argjson listed "${listed:-[]}" --argjson store "$store" '
+  jq -cn --argjson listed "${listed:-[]}" --argjson store "$store" --arg turnedOff "$(t bindings.turnedOff)" '
     def canonical: ascii_upcase | gsub("\\+"; " ") | gsub("\\s+"; " ")
       | sub("^ "; "") | sub(" $"; "") | split(" ") | join(" + ");
 
@@ -154,7 +155,7 @@ bindings_state() {
                 + [$disabled[]
                     | (. | canonical) as $key
                     | select(($mine[$key] | not) and ($liveKeys | index($key) | not))
-                    | { keys: ., canonical: $key, description: "Turned off",
+                    | { keys: ., canonical: $key, description: $turnedOff,
                         command: "", source: "disabled" }]
                 # A binding added here shows up even before Hyprland has
                 # reloaded, so adding one never looks like it did nothing.

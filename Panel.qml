@@ -5,6 +5,7 @@ import qs.Commons
 // A bare `Color` is QtQuick's own value type on Qt 6.12, not the theme.
 import qs.Commons as Commons
 import qs.Ui
+import "ui" as Ui
 
 // The bar's way into OmaControl: a gear that opens the window.
 //
@@ -46,9 +47,9 @@ BarWidget {
   readonly property var switches: service && service.switches ? service.switches : ({})
   readonly property var switchedOn: {
     var on = []
-    if (switches.nightlight === true) on.push("Night light")
-    if (switches.dnd === true) on.push("Do not disturb")
-    if (switches.awake === true) on.push("Stay awake")
+    if (switches.nightlight === true) on.push(Ui.Strings.t("gear.nightLight"))
+    if (switches.dnd === true) on.push(Ui.Strings.t("gear.doNotDisturb"))
+    if (switches.awake === true) on.push(Ui.Strings.t("gear.stayAwake"))
     return on
   }
 
@@ -111,11 +112,11 @@ BarWidget {
     text: "\uf013"
     tooltipText: {
       var parts = []
-      if (root.offline) parts.push("No network")
-      if (root.batteryLow) parts.push("Battery at " + root.batteryLevel + " %")
+      if (root.offline) parts.push(Ui.Strings.t("gear.noNetwork"))
+      if (root.batteryLow) parts.push(Ui.Strings.t("gear.batteryAt").arg(root.batteryLevel))
       for (var i = 0; i < root.lowDevices.length; i++)
-        parts.push(root.lowDevices[i].name + " at " + root.lowDevices[i].percent + " %")
-      if (root.switchedOn.length > 0) parts.push(root.switchedOn.join(", ") + " on")
+        parts.push(Ui.Strings.t("gear.deviceAt").arg(root.lowDevices[i].name).arg(root.lowDevices[i].percent))
+      if (root.switchedOn.length > 0) parts.push(Ui.Strings.t("gear.switchedOn").arg(root.switchedOn.join(", ")))
       return parts.length > 0 ? "OmaControl — " + parts.join(" · ") : "OmaControl"
     }
     active: root.opened

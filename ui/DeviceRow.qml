@@ -28,9 +28,9 @@ Item {
     id: nav
     anchors.fill: parent
     searchText: deviceRow.title + " " + deviceRow.address + " " + deviceRow.kind
-    navKeys: deviceRow.connected ? [{ key: "Space", label: "Disconnect" }]
-      : (deviceRow.paired ? [{ key: "Space", label: "Connect" }]
-                          : [{ key: "Space", label: "Pair" }])
+    navKeys: deviceRow.connected ? [{ key: "Space", label: Local.Strings.t("common.disconnect") }]
+      : (deviceRow.paired ? [{ key: "Space", label: Local.Strings.t("ui.deviceRow.connect") }]
+                          : [{ key: "Space", label: Local.Strings.t("ui.deviceRow.pair") }])
     onNavActivate: {
       if (deviceRow.connected) deviceRow.disconnectRequested()
       else if (deviceRow.paired) deviceRow.connectRequested()

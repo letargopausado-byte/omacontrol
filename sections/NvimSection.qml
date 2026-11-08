@@ -7,10 +7,10 @@ Ui.SectionBody {
   id: page
   property var app: null
   Ui.SettingGroup {
-    title: "The gutter"
+    title: Ui.Strings.t("nvim.theGutter")
 
     Ui.SwitchRow {
-      label: "Line numbers"
+      label: Ui.Strings.t("nvim.lineNumbers")
       checked: page.app.nvimValue("number", true) === true
       onRequested: function(next) { page.app.setNvim("number", next ? "true" : "false") }
       changed: page.app.isChanged("nvim:number")
@@ -18,7 +18,7 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Relative line numbers"
+      label: Ui.Strings.t("nvim.relativeLineNumbers")
       checked: page.app.nvimValue("relativenumber", true) === true
       onRequested: function(next) { page.app.setNvim("relativenumber", next ? "true" : "false") }
       changed: page.app.isChanged("nvim:relativenumber")
@@ -26,13 +26,13 @@ Ui.SectionBody {
     }
 
     Ui.PickerRow {
-      label: "Sign column"
-      description: "Where git marks and diagnostics appear."
+      label: Ui.Strings.t("nvim.signColumn")
+      description: Ui.Strings.t("nvim.whereGitMarksAndDiagnostics")
       value: String(page.app.nvimValue("signcolumn", "yes"))
       options: [
-        { value: "yes", label: "Always" },
-        { value: "auto", label: "Only when needed" },
-        { value: "no", label: "Never" }
+        { value: "yes", label: Ui.Strings.t("nvim.always") },
+        { value: "auto", label: Ui.Strings.t("nvim.onlyWhenNeeded") },
+        { value: "no", label: Ui.Strings.t("nvim.never") }
       ]
       onPicked: function(next) { page.app.setNvim("signcolumn", next) }
       changed: page.app.isChanged("nvim:signcolumn")
@@ -41,10 +41,10 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "The text"
+    title: Ui.Strings.t("nvim.theText")
 
     Ui.SwitchRow {
-      label: "Wrap long lines"
+      label: Ui.Strings.t("nvim.wrapLongLines")
       checked: page.app.nvimValue("wrap", false) === true
       onRequested: function(next) { page.app.setNvim("wrap", next ? "true" : "false") }
       changed: page.app.isChanged("nvim:wrap")
@@ -52,7 +52,7 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Highlight the current line"
+      label: Ui.Strings.t("nvim.highlightTheCurrentLine")
       checked: page.app.nvimValue("cursorline", true) === true
       onRequested: function(next) { page.app.setNvim("cursorline", next ? "true" : "false") }
       changed: page.app.isChanged("nvim:cursorline")
@@ -60,8 +60,8 @@ Ui.SectionBody {
     }
 
     Ui.TextRow {
-      label: "Column guide"
-      description: "A column number, or empty for none."
+      label: Ui.Strings.t("nvim.columnGuide")
+      description: Ui.Strings.t("nvim.aColumnNumberOrEmpty")
       placeholder: "100"
       value: String(page.app.nvimValue("colorcolumn", ""))
       onCommitted: function(next) { page.app.setNvim("colorcolumn", next) }
@@ -70,8 +70,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Keep visible above and below"
-      suffix: "lines"
+      label: Ui.Strings.t("nvim.keepVisibleAboveAndBelow")
+      suffix: Ui.Strings.t("common.lines")
       value: Number(page.app.nvimValue("scrolloff", 4))
       from: 0
       to: 20
@@ -81,7 +81,7 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Spell checking"
+      label: Ui.Strings.t("nvim.spellChecking")
       checked: page.app.nvimValue("spell", false) === true
       onRequested: function(next) { page.app.setNvim("spell", next ? "true" : "false") }
       changed: page.app.isChanged("nvim:spell")
@@ -90,10 +90,10 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Indentation"
+    title: Ui.Strings.t("nvim.indentation")
 
     Ui.SwitchRow {
-      label: "Spaces instead of tabs"
+      label: Ui.Strings.t("nvim.spacesInsteadOfTabs")
       checked: page.app.nvimValue("expandtab", true) === true
       onRequested: function(next) { page.app.setNvim("expandtab", next ? "true" : "false") }
       changed: page.app.isChanged("nvim:expandtab")
@@ -101,8 +101,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Indent width"
-      suffix: "spaces"
+      label: Ui.Strings.t("nvim.indentWidth")
+      suffix: Ui.Strings.t("nvim.spaces")
       value: Number(page.app.nvimValue("shiftwidth", 2))
       from: 1
       to: 8
@@ -112,8 +112,8 @@ Ui.SectionBody {
     }
 
     Ui.NumberRow {
-      label: "Tab width"
-      suffix: "spaces"
+      label: Ui.Strings.t("nvim.tabWidth")
+      suffix: Ui.Strings.t("nvim.spaces")
       value: Number(page.app.nvimValue("tabstop", 2))
       from: 1
       to: 8
@@ -124,13 +124,13 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Beyond these settings"
-    note: "Changes here apply the next time Neovim starts."
+    title: Ui.Strings.t("common.beyondTheseSettings")
+    note: Ui.Strings.t("nvim.changesHereApplyTheNext")
 
     Ui.ActionRow {
-      label: "The rest of the config"
-      description: "Open options.lua for anything this page does not cover."
-      buttonText: "Edit…"
+      label: Ui.Strings.t("common.theRestOfTheConfig")
+      description: Ui.Strings.t("nvim.openOptionsLuaForAnything")
+      buttonText: Ui.Strings.t("common.edit")
       onTriggered: page.app.editConfig("$HOME/.config/nvim/lua/config/options.lua")
     }
   }

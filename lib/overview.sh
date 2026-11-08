@@ -10,6 +10,7 @@
 # that agrees with the bar and one that drifts from it.
 
 overview_toggles() {
+  i18n_load
   par_begin || { echo '[]'; return; }
   par_run nightlight overview_nightlight
   par_run dnd overview_dnd
@@ -28,45 +29,52 @@ overview_toggles() {
     --argjson nightlight "${nightlight:-{\}}" \
     --argjson dnd "${dnd:-{\}}" \
     --argjson awake "${awake:-{\}}" \
-    --argjson dictation "${dictation:-{\}}" '''
-    [ { id: "nightlight", label: "Night light" } + $nightlight,
-      { id: "dnd", label: "Do not disturb" } + $dnd,
-      { id: "awake", label: "Stay awake" } + $awake,
-      { id: "dictation", label: "Dictation" } + $dictation ]
+    --argjson dictation "${dictation:-{\}}" \
+    --arg nightlightLabel "$(t gear.nightLight)" \
+    --arg dndLabel "$(t gear.doNotDisturb)" \
+    --arg awakeLabel "$(t gear.stayAwake)" \
+    --arg dictationLabel "$(t overview.dictation)" '''
+    [ { id: "nightlight", label: $nightlightLabel } + $nightlight,
+      { id: "dnd", label: $dndLabel } + $dnd,
+      { id: "awake", label: $awakeLabel } + $awake,
+      { id: "dictation", label: $dictationLabel } + $dictation ]
     # A switch for something that is not installed is a switch that cannot do
     # anything, so it is not offered.
     | map(select(.available != false))'''
 }
 
 overview_nightlight() {
+  i18n_load
   local status
   status=$(capture omarchy-toggle-nightlight --status)
   [[ -n $status ]] || { echo '{"available":false}'; return; }
-  emit_json "$(jq -c '{ on: (.enabled == true),
+  emit_json "$(jq -c --arg off "$(t common.off)" '{ on: (.enabled == true),
            note: (if .enabled == true
                   then ((.temperature | tostring) + " K")
-                  else "Off" end) }' <<<"$status" 2>/dev/null)" '{"available":false}'
+                  else $off end) }' <<<"$status" 2>/dev/null)" '{"available":false}'
 }
 
 overview_dnd() {
+  i18n_load
   local state
   # The shell owns do-not-disturb, so the shell is asked. There is no file to
   # read: notifications are held in the running process.
   state=$(capture omarchy-shell notifications dndState)
   case ${state:-} in
-    on)  echo '{"on":true,"note":"Notifications held"}' ;;
-    off) echo '{"on":false,"note":"Notifications shown"}' ;;
+    on)  jq -cn --arg note "$(t overview.notificationsHeld)" '{ on: true, note: $note }' ;;
+    off) jq -cn --arg note "$(t overview.notificationsShown)" '{ on: false, note: $note }' ;;
     *)   echo '{"available":false}' ;;
   esac
 }
 
 overview_stay_awake() {
+  i18n_load
   local status
   status=$(capture omarchy-toggle-idle --status)
   [[ -n $status ]] || { echo '{"available":false}'; return; }
-  emit_json "$(jq -c '{ on: (.enabled == true),
-           note: (if .enabled == true then "Idle inhibited"
-                  else "Idles and locks normally" end) }' <<<"$status" 2>/dev/null)" \
+  emit_json "$(jq -c --arg held "$(t overview.idleInhibited)" --arg normal "$(t overview.idlesNormally)" \
+    '{ on: (.enabled == true), note: (if .enabled == true then $held else $normal end) }' \
+    <<<"$status" 2>/dev/null)" \
     '{"available":false}'
 }
 
@@ -79,16 +87,17 @@ overview_stay_awake() {
 # transcribe anything, and a switch for it is a switch that cannot work — so
 # that counts as unavailable and the row is not offered.
 overview_dictation() {
+  i18n_load
   omarchy-cmd-present voxtype || { echo '{"available":false}'; return; }
   local status
   status=$(capture voxtype status --extended --format json)
   [[ -n $status ]] || { echo '{"available":false}'; return; }
 
-  emit_json "$(jq -c '''
+  emit_json "$(jq -c --arg recording "$(t overview.recording)" --arg ready "$(t overview.readyModel)" '''
     if ((.model // "") == "") then { available: false }
     else { on: ((.class // "idle") == "recording"),
-           note: (if (.class // "") == "recording" then "Recording"
-                  else ("Ready · " + .model) end) }
+           note: (if (.class // "") == "recording" then $recording
+                  else (.model as $m | $ready | sub("%1"; $m; "g")) end) }
     end''' <<<"$status" 2>/dev/null)" '{"available":false}'
 }
 
@@ -129,6 +138,7 @@ OVERVIEW_PERIPHERAL_LOW=10
 OVERVIEW_PERIPHERAL_KINDS='mouse|keyboard|headset|headphones|pen|touchpad'
 
 overview_low_peripherals() {
+  i18n_load
   local devices
   devices=$(capture upower -e | grep -E "/($OVERVIEW_PERIPHERAL_KINDS)_")
   [[ -n ${devices:-} ]] || { echo '[]'; return; }
@@ -141,14 +151,16 @@ overview_low_peripherals() {
     [[ -n ${percent:-} ]] || continue
     [[ ${percent%%.*} -lt $OVERVIEW_PERIPHERAL_LOW ]] 2>/dev/null || continue
     model=$(awk -F': +' '/model:/ { print $2; exit }' <<<"$info")
-    [[ -n ${model:-} ]] || model="A Bluetooth device"
+    [[ -n ${model:-} ]] || model=$(t overview.aBluetoothDevice)
     out+=("$(jq -cn --arg model "$model" --argjson percent "${percent%%.*}" \
+      --arg title "$(t overview.deviceAt "$model" "${percent%%.*}")" \
+      --arg note "$(t overview.chargeIt)" --arg actionLabel "$(t overview.openBluetooth)" \
       '{ kind: "peripheral",
          id: ("peripheral:" + $model),
          device: $model, percent: $percent,
-         title: ($model + " is at " + ($percent | tostring) + " %"),
-         note: "Charge it before it drops off Bluetooth.",
-         action: "bluetooth", actionLabel: "Open Bluetooth" }')")
+         title: $title,
+         note: $note,
+         action: "bluetooth", actionLabel: $actionLabel }')")
   done <<<"$devices"
 
   ((${#out[@]})) && printf '%s\n' "${out[@]}" | jq -cs '.' || echo '[]'
@@ -189,6 +201,7 @@ overview_updates() {
 # machine from booting the next kernel rather than merely inconveniencing
 # someone. Below the threshold it is not mentioned at all.
 overview_boot_space() {
+  i18n_load
   local line size used pct
   line=$(capture df -B1 --output=size,used,pcent /boot | tail -n1)
   read -r size used pct <<<"$line"
@@ -196,16 +209,19 @@ overview_boot_space() {
   pct=${pct%\%}
   (( ${pct:-0} >= 75 )) || { echo 'null'; return; }
 
-  jq -cn --argjson pct "${pct:-0}" --argjson size "$size" --argjson used "$used" '''
+  jq -cn --argjson pct "${pct:-0}" --argjson size "$size" --argjson used "$used" \
+    --arg title "$(t overview.bootFull "${pct:-0}")" --arg note "$(t overview.kernelMayNotFit)" \
+    --arg actionLabel "$(t overview.openDisk)" '''
     { kind: "boot",
       id: "boot",
       urgent: true,
-      title: ("/boot is " + ($pct | tostring) + " % full"),
-      note: "A kernel update may not fit.",
-      action: "disk", actionLabel: "Open Disk" }'''
+      title: $title,
+      note: $note,
+      action: "disk", actionLabel: $actionLabel }'''
 }
 
 overview_state() {
+  i18n_load
   par_begin || { echo '{}'; return; }
   par_run toggles overview_toggles
   par_run attention overview_attention

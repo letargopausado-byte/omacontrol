@@ -14,16 +14,16 @@ Ui.SectionBody {
   readonly property string engine: String(app.hyprValue("layout", "dwindle"))
 
   Ui.SettingGroup {
-    title: "Engine"
+    title: Ui.Strings.t("layout.engine")
 
     Ui.ChoiceRow {
-      label: "Layout"
-      description: "Scrolling gives you niri-style side-scrolling columns."
+      label: Ui.Strings.t("common.layout")
+      description: Ui.Strings.t("layout.scrollingGivesYouNiriStyle")
       value: page.engine
       options: [
-        { value: "dwindle", label: "Dwindle" },
-        { value: "master", label: "Master" },
-        { value: "scrolling", label: "Scrolling" }
+        { value: "dwindle", label: Ui.Strings.t("layout.dwindle") },
+        { value: "master", label: Ui.Strings.t("layout.master") },
+        { value: "scrolling", label: Ui.Strings.t("layout.scrolling") }
       ]
       onPicked: function(next) { page.app.setHypr("layout", next) }
       changed: page.app.isChanged("layout")
@@ -32,12 +32,12 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Dwindle"
+    title: Ui.Strings.t("layout.dwindle")
     visible: !searchEmpty && page.engine === "dwindle"
 
     Ui.SwitchRow {
-      label: "Preserve split"
-      description: "Keeps the split direction when a window closes."
+      label: Ui.Strings.t("layout.preserveSplit")
+      description: Ui.Strings.t("layout.keepsTheSplitDirectionWhen")
       checked: page.app.hyprValue("dwindle-preserve-split", true) === true
       onRequested: function(next) { page.app.setHypr("dwindle-preserve-split", next ? "true" : "false") }
       changed: page.app.isChanged("dwindle-preserve-split")
@@ -45,8 +45,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Smart split"
-      description: "Picks the split direction from where in the window you drop."
+      label: Ui.Strings.t("layout.smartSplit")
+      description: Ui.Strings.t("layout.picksTheSplitDirectionFrom")
       checked: page.app.hyprValue("dwindle-smart-split", false) === true
       onRequested: function(next) { page.app.setHypr("dwindle-smart-split", next ? "true" : "false") }
       changed: page.app.isChanged("dwindle-smart-split")
@@ -54,13 +54,13 @@ Ui.SectionBody {
     }
 
     Ui.ChoiceRow {
-      label: "Split side"
-      description: "Where a new window lands."
+      label: Ui.Strings.t("layout.splitSide")
+      description: Ui.Strings.t("layout.whereANewWindowLands")
       value: String(page.app.hyprValue("dwindle-force-split", 0))
       options: [
-        { value: "0", label: "Cursor" },
-        { value: "1", label: "Before" },
-        { value: "2", label: "After" }
+        { value: "0", label: Ui.Strings.t("layout.cursor") },
+        { value: "1", label: Ui.Strings.t("layout.before") },
+        { value: "2", label: Ui.Strings.t("layout.after") }
       ]
       onPicked: function(next) { page.app.setHypr("dwindle-force-split", next) }
       changed: page.app.isChanged("dwindle-force-split")
@@ -68,8 +68,8 @@ Ui.SectionBody {
     }
 
     Ui.FactorRow {
-      label: "Split bias"
-      description: "Above 1.0 favours splitting side by side."
+      label: Ui.Strings.t("layout.splitBias")
+      description: Ui.Strings.t("layout.above10FavoursSplitting")
       minimum: 0.5
       maximum: 2
       value: page.app.hyprValue("dwindle-split-width-multiplier", 1)
@@ -79,8 +79,8 @@ Ui.SectionBody {
     }
 
     Ui.FactorRow {
-      label: "Split ratio"
-      description: "Size of a new split relative to its sibling."
+      label: Ui.Strings.t("layout.splitRatio")
+      description: Ui.Strings.t("layout.sizeOfANewSplit")
       minimum: 0.5
       maximum: 1.5
       value: page.app.hyprValue("dwindle-default-split-ratio", 1)
@@ -91,12 +91,12 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Master"
+    title: Ui.Strings.t("layout.master")
     visible: !searchEmpty && page.engine === "master"
 
     Ui.PercentRow {
-      label: "Master size"
-      description: "Fraction of the screen the master window takes."
+      label: Ui.Strings.t("layout.masterSize")
+      description: Ui.Strings.t("layout.fractionOfTheScreenThe")
       value: page.app.hyprValue("master-mfact", 0.55)
       onCommitted: function(next) { page.app.setHypr("master-mfact", next) }
       changed: page.app.isChanged("master-mfact")
@@ -104,15 +104,15 @@ Ui.SectionBody {
     }
 
     Ui.ChoiceRow {
-      label: "Master side"
-      description: "Which edge the master window occupies."
+      label: Ui.Strings.t("layout.masterSide")
+      description: Ui.Strings.t("layout.whichEdgeTheMasterWindow")
       value: String(page.app.hyprValue("master-orientation", "left"))
       options: [
-        { value: "left", label: "Left" },
-        { value: "right", label: "Right" },
-        { value: "top", label: "Top" },
-        { value: "bottom", label: "Bottom" },
-        { value: "center", label: "Center" }
+        { value: "left", label: Ui.Strings.t("layout.left") },
+        { value: "right", label: Ui.Strings.t("layout.right") },
+        { value: "top", label: Ui.Strings.t("common.top") },
+        { value: "bottom", label: Ui.Strings.t("common.bottom") },
+        { value: "center", label: Ui.Strings.t("layout.center") }
       ]
       onPicked: function(next) { page.app.setHypr("master-orientation", next) }
       changed: page.app.isChanged("master-orientation")
@@ -120,13 +120,13 @@ Ui.SectionBody {
     }
 
     Ui.ChoiceRow {
-      label: "New windows"
-      description: "Where a newly opened window goes."
+      label: Ui.Strings.t("layout.newWindows")
+      description: Ui.Strings.t("layout.whereANewlyOpenedWindow")
       value: String(page.app.hyprValue("master-new-status", "master"))
       options: [
-        { value: "master", label: "Master" },
-        { value: "slave", label: "Slave" },
-        { value: "inherit", label: "Inherit" }
+        { value: "master", label: Ui.Strings.t("layout.master") },
+        { value: "slave", label: Ui.Strings.t("layout.slave") },
+        { value: "inherit", label: Ui.Strings.t("layout.inherit") }
       ]
       onPicked: function(next) { page.app.setHypr("master-new-status", next) }
       changed: page.app.isChanged("master-new-status")
@@ -135,12 +135,12 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Scrolling"
+    title: Ui.Strings.t("layout.scrolling")
     visible: !searchEmpty && page.engine === "scrolling"
 
     Ui.PercentRow {
-      label: "Column width"
-      description: "Fraction of the screen one column takes. 97% shows one at a time."
+      label: Ui.Strings.t("layout.columnWidth")
+      description: Ui.Strings.t("layout.fractionOfTheScreenOne")
       value: page.app.hyprValue("scrolling-column-width", 0.5)
       onCommitted: function(next) { page.app.setHypr("scrolling-column-width", next) }
       changed: page.app.isChanged("scrolling-column-width")
@@ -148,8 +148,8 @@ Ui.SectionBody {
     }
 
     Ui.SwitchRow {
-      label: "Fill on one column"
-      description: "Lets a lone column use the whole screen."
+      label: Ui.Strings.t("layout.fillOnOneColumn")
+      description: Ui.Strings.t("layout.letsALoneColumnUse")
       checked: page.app.hyprValue("scrolling-fullscreen-on-one-column", false) === true
       onRequested: function(next) { page.app.setHypr("scrolling-fullscreen-on-one-column", next ? "true" : "false") }
       changed: page.app.isChanged("scrolling-fullscreen-on-one-column")

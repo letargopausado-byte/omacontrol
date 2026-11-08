@@ -27,7 +27,7 @@ Item {
   signal resetRequested()
   // What ⌫ is called on this row. A thing you created is not reset, it is
   // removed or forgotten, and the legend has to say which.
-  property string navResetLabel: "Reset"
+  property string navResetLabel: Local.Strings.t("ui.navCursor.reset")
 
   // Behind the row's own content: the band is a background, and drawing it
   // over the text would tint what it is meant to be pointing at.

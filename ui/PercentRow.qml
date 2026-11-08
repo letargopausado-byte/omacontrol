@@ -27,7 +27,7 @@ Local.SettingRow {
     if (Math.abs(value - pending) < 0.001 || Math.abs(value - basis) > 0.001) stepping = false
   }
 
-  navKeys: [{ key: "\u2190\u2192", label: "Adjust" }]
+  navKeys: [{ key: "\u2190\u2192", label: Local.Strings.t("common.adjust") }]
 
   function commit(next) {
     var wanted = Math.max(0, Math.min(1, Math.round(next * 100) / 100))

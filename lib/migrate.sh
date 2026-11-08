@@ -23,21 +23,24 @@ MIGRATE_LAST="$HOME_DIR/.local/state/omacontrol/migrate-last.json"
 # from the window a failure would otherwise look like a button that did
 # nothing.
 migrate_pending() {
+  i18n_load
   [[ -e $OMASETTINGS_STORE_PATH || -e $OMASETTINGS_LUA_PATH ]] || { echo 'null'; return; }
   bash "$MIGRATE_SCRIPT" --pending || { echo 'null'; return; }
   local last='null'
   [[ -f $MIGRATE_LAST ]] && last=$(jq -c 'if type == "object" then . else null end' "$MIGRATE_LAST" 2>/dev/null)
-  jq -cn --argjson last "${last:-null}" '
+  jq -cn --argjson last "${last:-null}" \
+    --arg title "$(t migrate.title)" --arg stopped "$(t migrate.lastTryStopped)" \
+    --arg note "$(t migrate.note)" --arg actionLabel "$(t migrate.bringThemOver)" '
     { kind: "migrate",
       id: "migrate-omasettings",
       urgent: ($last != null and $last.ok == false),
-      title: "Your settings from OmaSettings have not come across",
+      title: $title,
       note: (if $last != null and $last.ok == false
-             then "The last try stopped: " + $last.message
-             else "Until they do, this window cannot mark them as changed or put back what they replaced. It may close for a moment while they move."
+             then ($stopped | sub("%1"; $last.message; "g"))
+             else $note
              end),
       migrate: true,
-      actionLabel: "Bring them over" }'
+      actionLabel: $actionLabel }'
 }
 
 migrate_cmd() {

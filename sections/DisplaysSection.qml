@@ -52,7 +52,7 @@ Ui.SectionBody {
   // read it in: "is the laptop left of the monitor" is a question about a
   // shape. Only with two to arrange — one display is not an arrangement.
   Ui.SettingGroup {
-    title: "Arrangement"
+    title: Ui.Strings.t("displays.arrangement")
     visible: !searchEmpty && page.arrangeable.length > 1
 
     Ui.DisplayCanvas {
@@ -127,7 +127,7 @@ Ui.SectionBody {
       // Mirroring names an output rather than a display, which is Hyprland's
       // own rule and the one place a connector is the right answer.
       readonly property var mirrorOptions: {
-        var out = [{ value: "", label: "Off" }]
+        var out = [{ value: "", label: Ui.Strings.t("displays.off") }]
         for (var i = 0; i < page.displays.length; i++) {
           var other = page.displays[i]
           if (other.name === name || other.connected === false) continue
@@ -143,13 +143,13 @@ Ui.SectionBody {
       }
 
       width: parent.width
-      title: label + (connected ? "" : "  (not connected)")
+      title: connected ? label : Ui.Strings.t("common.notConnectedName").arg(label)
 
       // The title says which screen this is. The connector is the part you
       // cannot tell from that, and the part that changes between docks — so it
       // is shown, and nothing is written against it.
       Ui.ReadingRow {
-        label: "Connector"
+        label: Ui.Strings.t("displays.connector")
         visible: !searchHidden && displayGroup.connected && displayGroup.output !== ""
         value: displayGroup.output
       }
@@ -158,7 +158,7 @@ Ui.SectionBody {
       // resolution or a scale chosen now is what it comes back to, and
       // needing to turn a screen on to tell it how to come on is a loop.
       Ui.SwitchRow {
-        label: "Enabled"
+        label: Ui.Strings.t("common.enabled")
         visible: !searchHidden && displayGroup.connected
         checked: !displayGroup.off
         onRequested: function(next) {
@@ -169,10 +169,10 @@ Ui.SectionBody {
       }
 
       Ui.PickerRow {
-        label: "Resolution"
+        label: Ui.Strings.t("displays.resolution")
         // A display that is not here reports no modes, so what it was given is
         // the only option there is to show.
-        description: displayGroup.connected ? "" : "Applied when the display comes back."
+        description: displayGroup.connected ? "" : Ui.Strings.t("displays.appliedWhenBack")
         visible: !searchHidden
         value: displayGroup.resolution
         options: {
@@ -180,7 +180,7 @@ Ui.SectionBody {
           if (displayGroup.resolution !== "preferred"
               && !listed.some(function(item) { return item.value === displayGroup.resolution }))
             listed = [{ value: displayGroup.resolution, label: displayGroup.resolution.split("x").join(" × ") }].concat(listed)
-          return [{ value: "preferred", label: "Preferred (what the display asks for)" }].concat(listed)
+          return [{ value: "preferred", label: Ui.Strings.t("displays.preferredWhatTheDisplayAsks") }].concat(listed)
         }
         // A resolution is picked as a resolution, so the fastest rate the
         // display can do at it comes with it rather than being a second
@@ -200,7 +200,7 @@ Ui.SectionBody {
       }
 
       Ui.PickerRow {
-        label: "Refresh rate"
+        label: Ui.Strings.t("displays.refreshRate")
         visible: !searchHidden && displayGroup.refreshRates.length > 1
         value: displayGroup.refresh
         options: displayGroup.refreshRates
@@ -230,7 +230,7 @@ Ui.SectionBody {
       }
 
       Ui.ChoiceRow {
-        label: "Scale"
+        label: Ui.Strings.t("displays.scale")
         visible: !searchHidden
         value: Geometry.normalizeScale(displayGroup.modelData.scale)
         options: displayGroup.scaleOptions
@@ -240,11 +240,11 @@ Ui.SectionBody {
       }
 
       Ui.ChoiceRow {
-        label: "Rotation"
+        label: Ui.Strings.t("displays.rotation")
         visible: !searchHidden
         value: String(Number(displayGroup.modelData.transform) || 0)
         options: [
-          { value: "0", label: "None" },
+          { value: "0", label: Ui.Strings.t("displays.none") },
           { value: "1", label: "90°" },
           { value: "2", label: "180°" },
           { value: "3", label: "270°" }
@@ -255,18 +255,18 @@ Ui.SectionBody {
       }
 
       Ui.ChoiceRow {
-        label: "Variable refresh"
+        label: Ui.Strings.t("displays.variableRefresh")
         // The range is the display's own answer to whether this is worth
         // turning on, and it is not anywhere else on the desktop.
         description: String(displayGroup.modelData.vrrRange || "") !== ""
-          ? "This display varies between " + displayGroup.modelData.vrrRange + " Hz."
-          : "Lets the display follow what is being drawn instead of its own clock."
+          ? Ui.Strings.t("displays.vrrRange").arg(displayGroup.modelData.vrrRange)
+          : Ui.Strings.t("displays.vrrNote")
         visible: !searchHidden && displayGroup.connected
         value: String(Number(displayGroup.modelData.vrr) || 0)
         options: [
-          { value: "0", label: "Off" },
-          { value: "1", label: "On" },
-          { value: "2", label: "Fullscreen only" }
+          { value: "0", label: Ui.Strings.t("displays.off") },
+          { value: "1", label: Ui.Strings.t("common.on") },
+          { value: "2", label: Ui.Strings.t("displays.fullscreenOnly") }
         ]
         onPicked: function(next) { page.app.set("monitor:" + displayGroup.name + ":vrr", next) }
         changed: page.app.isChanged("monitor:" + displayGroup.name + ":vrr")
@@ -276,8 +276,8 @@ Ui.SectionBody {
       // Only for a display that says it can: a switch that cannot do anything
       // is worse than no switch, because it gives no reason why.
       Ui.SwitchRow {
-        label: "HDR"
-        description: "Wide colour and ten-bit output. Everything that is not HDR is mapped into it, which some desktops render washed out."
+        label: Ui.Strings.t("displays.hdr")
+        description: Ui.Strings.t("displays.wideColourAndTenBit")
         visible: !searchHidden && displayGroup.modelData.hdrCapable === true
         checked: displayGroup.modelData.hdr === true
         onRequested: function(next) {
@@ -288,8 +288,8 @@ Ui.SectionBody {
       }
 
       Ui.PickerRow {
-        label: "Mirror"
-        description: "Show what another display is showing."
+        label: Ui.Strings.t("displays.mirror")
+        description: Ui.Strings.t("displays.showWhatAnotherDisplayIs")
         visible: !searchHidden && displayGroup.connected && displayGroup.mirrorOptions.length > 1
         value: String(displayGroup.modelData.mirror || "")
         options: displayGroup.mirrorOptions
@@ -305,7 +305,7 @@ Ui.SectionBody {
       // change mark either: this is the screen in front of you rather than a
       // setting this window keeps.
       Ui.PercentRow {
-        label: "Brightness"
+        label: Ui.Strings.t("displays.brightness")
         visible: !searchHidden && !displayGroup.off && displayGroup.brightness >= 0
         value: displayGroup.brightness / 100
         onCommitted: function(next) {
@@ -317,7 +317,7 @@ Ui.SectionBody {
       // of you with nothing set, there is nothing this would undo.
       Ui.ActionRow {
         visible: !searchHidden && (Object.keys(displayGroup.settings).length > 0 || !displayGroup.connected)
-        buttonText: "Forget Display"
+        buttonText: Ui.Strings.t("displays.forgetDisplay")
         onTriggered: page.app.set("monitor-forget", displayGroup.name)
       }
     }

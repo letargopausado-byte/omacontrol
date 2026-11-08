@@ -19,7 +19,7 @@ Ui.SectionBody {
   // exclusively while it is open, so whatever opened would sit behind it with
   // nothing reaching it. The window goes first.
   Ui.SettingGroup {
-    title: "Screensaver"
+    title: Ui.Strings.t("branding.screensaver")
 
     Ui.AsciiPreview {
       visible: text !== ""
@@ -35,7 +35,7 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "About screen"
+    title: Ui.Strings.t("branding.aboutScreen")
 
     Ui.AsciiPreview {
       visible: text !== ""

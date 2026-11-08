@@ -139,12 +139,12 @@ Ui.SectionBody {
         Layout.fillWidth: true
         Layout.fillHeight: true
         Layout.preferredWidth: 1
-        label: "CPU"
+        label: Ui.Strings.t("processes.cpu")
         value: page.app.processes.cpu !== undefined && page.app.processes.cpu !== null
           ? page.app.processes.cpu + " %" : "—"
         note: {
           var parts = []
-          if (page.load.cores !== undefined) parts.push(page.load.cores + " cores")
+          if (page.load.cores !== undefined) parts.push(Ui.Strings.tn("processes.cores", Number(page.load.cores)).arg(page.load.cores))
           if (page.app.processes.temperature !== undefined && page.app.processes.temperature !== null)
             parts.push(page.app.processes.temperature + " °C")
           return parts.join(" · ")
@@ -188,12 +188,12 @@ Ui.SectionBody {
         Layout.fillWidth: true
         Layout.fillHeight: true
         Layout.preferredWidth: 1
-        label: "Memory"
+        label: Ui.Strings.t("processes.memory")
         value: page.memory.used !== undefined ? page.app.formatBytes(page.memory.used) : "—"
         note: {
           if (page.memory.total === undefined) return ""
-          var note = "of " + page.app.formatBytes(page.memory.total)
-          if (Number(page.memory.swap) > 0) note += " · swap " + page.app.formatBytes(page.memory.swap)
+          var note = Ui.Strings.t("processes.ofTotal").arg(page.app.formatBytes(page.memory.total))
+          if (Number(page.memory.swap) > 0) note += " · " + Ui.Strings.t("processes.swap").arg(page.app.formatBytes(page.memory.swap))
           return note
         }
 
@@ -211,7 +211,7 @@ Ui.SectionBody {
         Layout.fillWidth: true
         Layout.fillHeight: true
         Layout.preferredWidth: 1
-        label: "Load"
+        label: Ui.Strings.t("processes.load")
         value: page.load.one !== undefined
           ? [page.load.one, page.load.five, page.load.fifteen].map(function(v) { return Number(v).toFixed(2) }).join("  ")
           : "—"
@@ -221,10 +221,10 @@ Ui.SectionBody {
         // against: up to one per core, nothing is kept waiting.
         note: {
           if (page.load.one === undefined) return ""
-          var note = "Tasks waiting for the processor over 1, 5 and 15 min."
+          var note = Ui.Strings.t("processes.loadNote")
           var cores = Number(page.load.cores)
           return cores > 0
-            ? note + " With " + cores + " cores, under " + cores + " is fine."
+            ? note + " " + Ui.Strings.t("processes.loadYardstick").arg(cores)
             : note
         }
       }
@@ -232,7 +232,7 @@ Ui.SectionBody {
   }
 
   Ui.SettingGroup {
-    title: "Top processes"
+    title: Ui.Strings.t("processes.topProcesses")
 
     // Counted by name, so a browser's twenty processes are one browser — the
     // question is which program, not which of its helpers.
@@ -246,12 +246,12 @@ Ui.SectionBody {
         Layout.preferredWidth: 1
         Layout.alignment: Qt.AlignTop
         columns: [
-          { title: "Process", weight: 1.5 },
-          { title: "CPU", weight: 1.2 }
+          { title: Ui.Strings.t("processes.process"), weight: 1.5 },
+          { title: Ui.Strings.t("processes.cpu"), weight: 1.2 }
         ]
         currentRow: programRow(page.busiest, page.selectedProgram)
         onActivated: function(index) { pickProgram(busiestTable, "cpu", index) }
-        emptyNote: "Nothing to report."
+        emptyNote: Ui.Strings.t("processes.nothingToReport")
         rows: {
           var out = []
           for (var i = 0; i < page.busiest.length; i++) {
@@ -271,12 +271,12 @@ Ui.SectionBody {
         Layout.preferredWidth: 1
         Layout.alignment: Qt.AlignTop
         columns: [
-          { title: "Process", weight: 1.5 },
-          { title: "Memory", weight: 1.2 }
+          { title: Ui.Strings.t("processes.process"), weight: 1.5 },
+          { title: Ui.Strings.t("processes.memory"), weight: 1.2 }
         ]
         currentRow: programRow(page.heaviest, page.selectedProgram)
         onActivated: function(index) { pickProgram(heaviestTable, "memory", index) }
-        emptyNote: "Nothing to report."
+        emptyNote: Ui.Strings.t("processes.nothingToReport")
         rows: {
           var out = []
           for (var i = 0; i < page.heaviest.length; i++) {
@@ -306,20 +306,20 @@ Ui.SectionBody {
         text: {
           if (page.program === null) return ""
           var n = page.program.pids !== undefined ? page.program.pids.length : 0
-          return "End " + page.program.name + (n > 1 ? " (" + n + " processes)" : "")
+          return n > 1 ? Ui.Strings.t("processes.endProgramN").arg(page.program.name).arg(n) : Ui.Strings.t("processes.endName").arg(page.program.name)
         }
         onClicked: if (page.program !== null) page.app.run(["processes", "end"].concat(page.program.pids.map(String)))
       }
 
       Ui.Chip {
-        text: "Force quit"
+        text: Ui.Strings.t("processes.forceQuit")
         onClicked: if (page.program !== null) page.app.run(["processes", "kill"].concat(page.program.pids.map(String)))
       }
     }
   }
 
   Ui.SettingGroup {
-    title: "All processes"
+    title: Ui.Strings.t("processes.allProcesses")
 
     // Above the tree rather than under it, where the actions on a table
     // usually go. Under a list this long they are a scroll away from the row
@@ -338,28 +338,28 @@ Ui.SectionBody {
       Ui.Chip {
         enabled: page.selected !== null
         opacity: enabled ? 1 : 0.4
-        text: page.selected !== null ? "End " + page.selected.name : "End process"
+        text: page.selected !== null ? Ui.Strings.t("processes.endName").arg(page.selected.name) : Ui.Strings.t("processes.endProcess")
         onClicked: if (page.selected !== null) page.app.run(["processes", "end", String(page.selected.pid)])
       }
 
       Ui.Chip {
         enabled: page.selected !== null
         opacity: enabled ? 1 : 0.4
-        text: "Force quit"
+        text: Ui.Strings.t("processes.forceQuit")
         onClicked: if (page.selected !== null) page.app.run(["processes", "kill", String(page.selected.pid)])
       }
     }
 
     Ui.DataTable {
       columns: [
-        { title: "PID", weight: 0.7, align: "right" },
-        { title: "Process", weight: 3.2 },
-        { title: "CPU", weight: 1.2 },
-        { title: "Memory", weight: 1.2 }
+        { title: Ui.Strings.t("processes.pid"), weight: 0.7, align: "right" },
+        { title: Ui.Strings.t("processes.process"), weight: 3.2 },
+        { title: Ui.Strings.t("processes.cpu"), weight: 1.2 },
+        { title: Ui.Strings.t("processes.memory"), weight: 1.2 }
       ]
       id: processTree
       currentRow: page.selectedRow
-      emptyNote: "Nothing to report."
+      emptyNote: Ui.Strings.t("processes.nothingToReport")
       rows: {
         // A folded row stands for its whole branch, so it carries the
         // branch's totals — otherwise folding a terminal would make
